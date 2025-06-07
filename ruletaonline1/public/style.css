@@ -372,8 +372,8 @@ body.slot #slot-bg { display: block !important; }
 /* --- FICHAS SOBRE LA MESA: más pequeñas en móvil y desktop --- */
 .apuesta-ficha {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 36px;
+  height: 36px;
   z-index: 3;
   left: 50%; top: 50%;
   transform: translate(-50%,-50%);
