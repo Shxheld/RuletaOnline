@@ -106,17 +106,20 @@ renderFichas();
 function posicionarDeshacerBtn() {
   // Espera a que la mesa esté renderizada
   const btn = document.getElementById('deshacerBtn');
-  const casilla36 = document.querySelector('[data-casilla-ficha="36"]');
-  if (btn && casilla36) {
-    const rect = casilla36.getBoundingClientRect();
+  // Coloca el botón a la derecha de la última casilla (36), ajustado para móvil/grid vertical
+  let casillaRef = window.innerWidth <= 700
+    ? document.querySelector('[data-casilla-ficha="36"]')
+    : document.querySelector('[data-casilla-ficha="36"]');
+  if (btn && casillaRef) {
+    const rect = casillaRef.getBoundingClientRect();
     const mesaRect = mesa.getBoundingClientRect();
     btn.style.position = 'absolute';
-    btn.style.top = (rect.top - mesaRect.top + rect.height/2 - 18) + 'px';
-    btn.style.left = (rect.right - mesaRect.left + 8) + 'px'; // Menos separación para pantallas chicas
+    btn.style.top = (rect.top - mesaRect.top + rect.height/2 - 10) + 'px';
+    btn.style.left = (rect.right - mesaRect.left + 6) + 'px';
     btn.style.margin = '0';
-    btn.style.width = '36px';
-    btn.style.height = '36px';
-    btn.style.borderRadius = '9px';
+    btn.style.width = window.innerWidth <= 700 ? '22px' : '36px';
+    btn.style.height = window.innerWidth <= 700 ? '22px' : '36px';
+    btn.style.borderRadius = window.innerWidth <= 700 ? '6px' : '9px';
     btn.classList.add('cuadrado');
     btn.style.display = 'flex';
     btn.style.alignItems = 'center';
@@ -133,34 +136,78 @@ function renderMesaApuestas() {
   } else {
     grid.innerHTML = "";
   }
-  grid.appendChild(casillaNumDiv("0", 1, 1, 2, "green cero-doble"));
-  grid.appendChild(casillaNumDiv("00", 1, 3, 2, "green cero-doble"));
 
-  let numGrid = [
-    ["3","6","9","12","15","18","21","24","27","30","33","36"],
-    ["2","5","8","11","14","17","20","23","26","29","32","35"],
-    ["1","4","7","10","13","16","19","22","25","28","31","34"]
-  ];
-  for(let row=0; row<3; row++)
-    for(let col=0; col<12; col++)
-      grid.appendChild(
-        casillaNumDiv(
-          numGrid[row][col],
-          col+2,
-          row+1,
-          1,
-          (numGrid[row][col]==="0"||numGrid[row][col]==="00")?"green":WHEEL_COLORS[numGrid[row][col]]
-        )
-      );
+  // Nuevo layout vertical para móvil
+  const isMobile = window.innerWidth <= 700;
+  if (isMobile) {
+    // 4 columnas x 9 filas (vertical)
+    // Números ordenados para que visualmente sean tipo "columna"
+    const numVertical = [
+      ["1", "2", "3", "0"],
+      ["4", "5", "6", "00"],
+      ["7", "8", "9", ""],
+      ["10", "11", "12", ""],
+      ["13", "14", "15", ""],
+      ["16", "17", "18", ""],
+      ["19", "20", "21", ""],
+      ["22", "23", "24", ""],
+      ["25", "26", "27", ""],
+    ];
+    // Render números
+    for(let row=0; row<numVertical.length; row++) {
+      for(let col=0; col<4; col++) {
+        const num = numVertical[row][col];
+        if (num) {
+          grid.appendChild(
+            casillaNumDiv(
+              num,
+              col+1, // gridColumn
+              row+1, // gridRow
+              1,
+              (num==="0"||num==="00")?"green":WHEEL_COLORS[num]
+            )
+          );
+        }
+      }
+    }
+    // Render docenas y apuestas externas (debajo del grid principal, en filas adicionales, ocupando varias columnas)
+    grid.appendChild(casillaBetOuter("1st12", 1, 10, 2, "doz1"));
+    grid.appendChild(casillaBetOuter("2nd12", 3, 10, 2, "doz2"));
+    grid.appendChild(casillaBetOuter("3rd12", 1, 11, 2, "doz3"));
+    grid.appendChild(casillaBetOuter("1 to 18", 3, 11, 2, "low"));
+    grid.appendChild(casillaBetOuter("◆", 1, 12, 2, "red", "red"));
+    grid.appendChild(casillaBetOuter("◆", 3, 12, 2, "black", "black"));
+    grid.appendChild(casillaBetOuter("19 to 36", 1, 13, 4, "high"));
+  } else {
+    // PC - clásico 3 filas x 12 columnas
+    grid.appendChild(casillaNumDiv("0", 1, 1, 2, "green cero-doble"));
+    grid.appendChild(casillaNumDiv("00", 1, 3, 2, "green cero-doble"));
+    let numGrid = [
+      ["3","6","9","12","15","18","21","24","27","30","33","36"],
+      ["2","5","8","11","14","17","20","23","26","29","32","35"],
+      ["1","4","7","10","13","16","19","22","25","28","31","34"]
+    ];
+    for(let row=0; row<3; row++)
+      for(let col=0; col<12; col++)
+        grid.appendChild(
+          casillaNumDiv(
+            numGrid[row][col],
+            col+2,
+            row+1,
+            1,
+            (numGrid[row][col]==="0"||numGrid[row][col]==="00")?"green":WHEEL_COLORS[numGrid[row][col]]
+          )
+        );
+    grid.appendChild(casillaBetOuter("1st12",2,4,4,"doz1"));
+    grid.appendChild(casillaBetOuter("2nd12",6,4,4,"doz2"));
+    grid.appendChild(casillaBetOuter("3rd12",10,4,4,"doz3"));
+    grid.appendChild(casillaBetOuter("1 to 18",2,5,4,"low"));
+    grid.appendChild(casillaBetOuter("◆",6,5,2,"red","red"));
+    grid.appendChild(casillaBetOuter("◆",8,5,2,"black","black"));
+    grid.appendChild(casillaBetOuter("19 to 36",10,5,4,"high"));
+  }
 
-  grid.appendChild(casillaBetOuter("1st12",2,4,4,"doz1"));
-  grid.appendChild(casillaBetOuter("2nd12",6,4,4,"doz2"));
-  grid.appendChild(casillaBetOuter("3rd12",10,4,4,"doz3"));
-  grid.appendChild(casillaBetOuter("1 to 18",2,5,4,"low"));
-  grid.appendChild(casillaBetOuter("◆",6,5,2,"red","red"));
-  grid.appendChild(casillaBetOuter("◆",8,5,2,"black","black"));
-  grid.appendChild(casillaBetOuter("19 to 36",10,5,4,"high"));
-
+  // Fichas sobrepuestas
   let agrupadas = {};
   apuestas.forEach((ap, idx) => {
     if(!agrupadas[ap.casilla]) agrupadas[ap.casilla] = [];
@@ -174,8 +221,8 @@ function renderMesaApuestas() {
         fichaDiv.className = "apuesta-ficha";
         fichaDiv.style.top = `calc(50% + ${idx2*8}px)`;
         fichaDiv.innerHTML = fichaSVG(FICHAS[ap.fichaIdx].valor, FICHAS[ap.fichaIdx].color, FICHAS[ap.fichaIdx].borde, FICHAS[ap.fichaIdx].rayas, FICHAS[ap.fichaIdx].txt);
-        fichaDiv.style.width = "22px";
-        fichaDiv.style.height = "22px";
+        fichaDiv.style.width = isMobile ? "18px" : "22px";
+        fichaDiv.style.height = isMobile ? "18px" : "22px";
         cas.appendChild(fichaDiv);
       });
     }
@@ -185,7 +232,7 @@ function renderMesaApuestas() {
 }
 renderMesaApuestas();
 
-function casillaNumDiv(num,col,row,span,colorClass) {
+function casillaNumDiv(num, col, row, span, colorClass) {
   let outer = document.createElement('div');
   let classes = ["casilla-num"];
   if (colorClass) {
