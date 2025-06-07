@@ -498,5 +498,5 @@ body.slot #slot-bg { display: block !important; }
   pointer-events: auto !important;
   z-index: 10000 !important;
   position: relative !important;
-  margin-top: 50px;
+  margin-top: 150px;
 }
