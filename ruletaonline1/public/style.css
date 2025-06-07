@@ -231,6 +231,7 @@ body.slot #slot-bg { display: block !important; }
   align-items: center;
   min-width: 600px;
   margin-top: 0;
+  margin-left: 100px;
 }
 .casino-fichas {
   display: flex;
