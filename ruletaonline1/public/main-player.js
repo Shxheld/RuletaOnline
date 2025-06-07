@@ -36,13 +36,15 @@ const inputNombre = document.getElementById('input-nombre');
 const btnNombre = document.getElementById('btn-nombre');
 const nombreUsuarioContainer = document.getElementById('nombre-usuario-container');
 
-btnNombre.onclick = () => {
+// Usar evento submit del formulario para compatibilidad móvil
+nombreForm.addEventListener('submit', function(e) {
+  e.preventDefault();
   const val = inputNombre.value.trim();
   if (!val) return alert("Debes escribir tu nombre.");
   nombre = val;
   nombreUsuarioContainer.style.display = "none";
   socket.emit('registro', {nombre, saldo});
-};
+});
 
 function fichaSVG(valor, color, borde, rayas, txt) {
   let txtVal = (valor>=1000) ? (valor/1000)+"K" : valor;
