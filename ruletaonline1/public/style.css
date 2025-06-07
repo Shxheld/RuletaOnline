@@ -52,9 +52,9 @@ body.slot #slot-bg { display: block !important; }
 
 /* ---- BOTONES MODERNOS ---- */
 .btn-casino, #girarBtn, #apostarBtn {
-  font-size: 2em;
-  padding: 20px 60px;
-  border-radius: 18px;
+  font-size: 1.3em;
+  padding: 13px 32px;
+  border-radius: 14px;
   background: linear-gradient(90deg, #ffd700 0%, #00ffd0 100%);
   color: #181a23;
   font-weight: bold;
@@ -63,7 +63,7 @@ body.slot #slot-bg { display: block !important; }
   letter-spacing: 2px;
   transition: background 0.18s, color 0.18s, transform 0.15s, box-shadow 0.18s;
   cursor: pointer;
-  margin: 0 14px;
+  margin: 0 8px;
   outline: none;
   text-shadow: 0 1px 4px #ffd70044;
   display: inline-block;
@@ -89,10 +89,10 @@ body.slot #slot-bg { display: block !important; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 62px 18px 62px;
+  padding: 16px 24px 10px 24px;
 }
 .casino-title {
-  font-size: 2.9em;
+  font-size: 2em;
   font-weight: bold;
   color: #ffd700;
   letter-spacing: 1.5px;
@@ -100,12 +100,12 @@ body.slot #slot-bg { display: block !important; }
   font-family: 'Montserrat', Arial, sans-serif;
 }
 .casino-balance {
-  font-size: 1.6em;
+  font-size: 1.2em;
   color: #00ffd0;
   background: linear-gradient(90deg,#23253b 80%,#ffd70033 100%);
-  padding: 13px 52px;
-  border-radius: 30px;
-  min-width: 170px;
+  padding: 8px 24px;
+  border-radius: 20px;
+  min-width: 110px;
   text-align: center;
   box-shadow: 0 0 16px #00ffd077;
   font-weight: bold;
@@ -138,24 +138,24 @@ body.slot #slot-bg { display: block !important; }
 }
 .tablero-jugadores {
   position: fixed;
-  top: 36px;
-  right: 54px;
-  width: 370px;
+  top: 24px;
+  right: 18px;
+  width: 250px;
   min-width: unset;
-  max-width: 400px;
+  max-width: 280px;
   background: rgba(24,26,35,0.88);
-  border-radius: 22px;
+  border-radius: 18px;
   box-shadow: 0 0 22px #00ffd099, 0 0 0 2px #ffd70022;
-  padding: 36px 38px 30px 38px;
+  padding: 20px 18px 14px 18px;
   font-family: 'Montserrat', Arial, sans-serif;
   z-index: 20;
 }
 
 .ruleta-canvas-container {
   position: relative;
-  width: 700px;
-  height: 700px;
-  margin: 0 auto 30px auto;
+  width: 430px;
+  height: 430px;
+  margin: 0 auto 20px auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,7 +164,7 @@ body.slot #slot-bg { display: block !important; }
   display: block;
   background: none;
   border-radius: 50%;
-  box-shadow: 0 0 0 10px #ffd70099;
+  box-shadow: 0 0 0 5px #ffd70099;
   z-index: 10;
 }
 
@@ -173,10 +173,10 @@ body.slot #slot-bg { display: block !important; }
   position: absolute;
   width: 0;
   height: 0;
-  border-top: 18px solid transparent;
-  border-bottom: 18px solid transparent;
-  border-right: 38px solid #fff;
-  left: calc(50% + 330px);
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  border-right: 26px solid #fff;
+  left: calc(50% + 190px);
   top: 50%;
   transform: translate(-50%, -50%) rotate(180deg);
   z-index: 12;
@@ -186,31 +186,31 @@ body.slot #slot-bg { display: block !important; }
 /* ---- TABLERO DE JUGADORES ---- */
 .tablero-jugadores h2, .tablero-jugadores h3 {
   color: #ffd700;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-weight: 700;
   letter-spacing: 1.2px;
-  font-size: 2em;
+  font-size: 1.14em;
   text-shadow: 0 2px 14px #ffd70022;
 }
 .tablero-jugadores h3 {
-  margin-top: 22px;
+  margin-top: 12px;
   color: #00ffd0;
-  font-size: 1.3em;
+  font-size: 0.98em;
   text-shadow: 0 2px 8px #00ffd055;
 }
 .tablero-jugadores ul {
   color: #fff;
-  font-size: 1.17em;
-  min-height: 64px;
-  margin-bottom: 18px;
+  font-size: 1em;
+  min-height: 40px;
+  margin-bottom: 8px;
   list-style: none;
   padding: 0;
 }
 .tablero-jugadores ul li {
-  padding: 7px 0 7px 13px;
+  padding: 5px 0 5px 9px;
   border-bottom: 1px solid #2a2a38;
   margin-bottom: 0px;
-  font-size: 1.10em;
+  font-size: 0.97em;
   font-family: 'Montserrat', Arial, sans-serif;
   letter-spacing: 0.7px;
   transition: background 0.13s;
@@ -229,21 +229,21 @@ body.slot #slot-bg { display: block !important; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 1100px;
+  min-width: 600px;
   margin-top: 0;
 }
 .casino-fichas {
   display: flex;
-  gap: 40px;
-  margin-bottom: 32px;
-  margin-left: 18px;
+  gap: 16px;
+  margin-bottom: 18px;
+  margin-left: 10px;
 }
 .ficha {
-  width: 68px; height: 68px;
+  width: 40px; height: 40px;
   cursor: pointer;
   border-radius: 50%;
-  border: 3px solid #ffd700bb;
-  box-shadow: 0 6px 18px #000a, 0 0 0 8px #ffd70033;
+  border: 2px solid #ffd700bb;
+  box-shadow: 0 3px 9px #000a, 0 0 0 3px #ffd70033;
   background: linear-gradient(145deg, #fcfaf1 10%, #ffd70050 80%);
   display: flex;
   align-items: center;
@@ -251,18 +251,18 @@ body.slot #slot-bg { display: block !important; }
   transition: transform .15s, border-color .17s, box-shadow .19s;
 }
 .ficha.selected { 
-  transform: scale(1.18); 
+  transform: scale(1.13); 
   border-color: #00ffd0; 
-  box-shadow: 0 0 30px #00ffd0aa, 0 0 0 12px #ffd70033;
+  box-shadow: 0 0 14px #00ffd0aa, 0 0 0 6px #ffd70033;
 }
-.ficha svg { width: 62px; height: 62px; }
+.ficha svg { width: 36px; height: 36px; }
 .mesa-casino {
   display: grid;
-  grid-template-columns: 95px repeat(12, 95px) 95px;
-  grid-template-rows: repeat(3, 95px) 95px 95px;
-  gap: 13px 13px;
+  grid-template-columns: 45px repeat(12, 45px) 45px;
+  grid-template-rows: repeat(3, 45px) 45px 45px;
+  gap: 5px 5px;
   position: relative;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 #mesaApuestas {
@@ -271,79 +271,79 @@ body.slot #slot-bg { display: block !important; }
 #deshacerBtn.cuadrado {
   position: absolute;
   z-index: 15;
-  width: 56px;
-  height: 56px;
-  border-radius: 13px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   background: #23253b;
   color: #ffd700;
   border: none;
-  box-shadow: 0 2px 18px #ffd70050;
+  box-shadow: 0 2px 8px #ffd70050;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2em;
+  font-size: 1.2em;
   margin: 0;
 }
 #deshacerBtn.cuadrado:hover {
   background: #ffd700;
   color: #18191d;
-  transform: scale(1.12);
+  transform: scale(1.10);
 }
 #apostarBtn {
   position: absolute;
   left: 50%;
   top: 100%;
-  transform: translate(-50%, 24px);
-  min-width: 230px;
+  transform: translate(-50%, 16px);
+  min-width: 120px;
   z-index: 13;
   margin: 0;
 }
 
 .casilla-num, .casilla-bet-outer {
-  min-width: 93px;
-  min-height: 93px;
+  min-width: 43px;
+  min-height: 43px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 95px;
+  height: 45px;
 }
 .casilla-num {
-  border-radius: 18px;
-  font-size: 1.6em;
+  border-radius: 10px;
+  font-size: 1.05em;
   font-weight: bold;
   color: #fff;
   cursor: pointer;
   border: none;
   background: rgba(30,33,45,0.92);
-  box-shadow: 0 2px 10px #000b;
+  box-shadow: 0 2px 5px #000b;
   transition: box-shadow 0.14s, background 0.14s;
   z-index: 1;
   user-select: none;
-  height: 95px;
+  height: 45px;
 }
 .casilla-num.red { background: linear-gradient(120deg, #ff637a 70%, #a3121d 100%);}
 .casilla-num.black { background: linear-gradient(120deg, #222 70%, #51545c 100%);}
 .casilla-num.green { background: linear-gradient(120deg, #39ea92 60%, #176b34 100%);}
 .casilla-num:hover,
 .casilla-bet:hover {
-  box-shadow: 0 0 18px #ffd70077, 0 4px 16px #000b;
+  box-shadow: 0 0 9px #ffd70077, 0 2px 7px #000b;
   background: #222e;
 }
 .casilla-num.selected {
-  box-shadow: 0 0 0 10px #00ffd044;
+  box-shadow: 0 0 0 4px #00ffd044;
 }
 .casilla-num.cero-doble {
   grid-row: span 2;
-  height: 203px;
-  min-height: 203px;
+  height: 95px;
+  min-height: 95px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 .casilla-bet {
-  border-radius: 19px;
-  font-size: 2.3em;
+  border-radius: 12px;
+  font-size: 1.18em;
   font-weight: bold;
   color: #ffd700;
   display: flex;
@@ -352,11 +352,11 @@ body.slot #slot-bg { display: block !important; }
   cursor: pointer;
   border: none;
   background: #274a67;
-  box-shadow: 0 2px 10px #0007;
+  box-shadow: 0 2px 5px #0007;
   transition: box-shadow 0.12s, background 0.13s;
   user-select: none;
-  min-width: 93px;
-  min-height: 93px;
+  min-width: 43px;
+  min-height: 43px;
   width: 100%;
   height: 100%;
   font-family: 'Montserrat', Arial, sans-serif;
@@ -366,24 +366,24 @@ body.slot #slot-bg { display: block !important; }
 .casilla-bet.selected {
   background: #ffd70044;
   color: #1a1a1a;
-  box-shadow: 0 0 12px #ffd70088;
+  box-shadow: 0 0 6px #ffd70088;
 }
-/* --- FICHAS SOBRE LA MESA: más pequeñas en móvil --- */
+/* --- FICHAS SOBRE LA MESA: más pequeñas en móvil y desktop --- */
 .apuesta-ficha {
   position: absolute;
-  width: 54px;
-  height: 54px;
+  width: 16px;
+  height: 16px;
   z-index: 3;
   left: 50%; top: 50%;
   transform: translate(-50%,-50%);
   pointer-events: auto;
   animation: fichaDrop 0.5s cubic-bezier(.23,1.56,.63,1) 1;
   transition: box-shadow .15s;
-  filter: drop-shadow(0 4px 10px #ffd70088);
+  filter: drop-shadow(0 2px 4px #ffd70088);
 }
 @keyframes fichaDrop {
   0% { transform: translate(-50%,-90%) scale(0.7); opacity: 0.2;}
-  85% { transform: translate(-50%, 8px) scale(1.11);}
+  85% { transform: translate(-50%, 4px) scale(1.11);}
   100% { transform: translate(-50%, -50%) scale(1);}
 }
 .casilla-bet-label {
@@ -404,7 +404,7 @@ body.slot #slot-bg { display: block !important; }
 #mensaje {
   min-height: 32px;
   margin-top: 20px;
-  font-size: 1.25em;
+  font-size: 1.05em;
   font-weight: bold;
   color: #00ffd0;
   text-shadow: 0 0 8px #222, 0 0 5px #ffd70055;
@@ -424,47 +424,47 @@ body.slot #slot-bg { display: block !important; }
   transition: opacity 0.4s;
 }
 #nombre-usuario-titulo {
-  font-size: 2.5em;
+  font-size: 1.6em;
   color: #ffd700;
   font-weight: bold;
   letter-spacing: 1.5px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   text-align: center;
 }
 #nombre-form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 #nombre-usuario-input {
-  font-size: 1.7em;
-  padding: 10px 38px;
-  border-radius: 18px;
+  font-size: 1.12em;
+  padding: 6px 18px;
+  border-radius: 12px;
   border: 2px solid #ffd700bb;
   background: #23253b;
   color: #fff;
   font-family: 'Montserrat', Arial, sans-serif;
   letter-spacing: 1.2px;
   outline: none;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   transition: border 0.18s, box-shadow 0.18s;
-  box-shadow: 0 2px 18px #ffd70033;
+  box-shadow: 0 2px 8px #ffd70033;
 }
 #nombre-usuario-input:focus {
   border: 2.5px solid #00ffd0;
-  box-shadow: 0 0 22px #00ffd077;
+  box-shadow: 0 0 11px #00ffd077;
 }
 #btn-nombre {
-  font-size: 1.3em;
+  font-size: 1em;
   background: linear-gradient(90deg, #ffd700 0%, #00ffd0 100%);
   color: #18191d;
   font-weight: bold;
-  border-radius: 16px;
+  border-radius: 10px;
   border: none;
-  padding: 12px 36px;
+  padding: 7px 18px;
   cursor: pointer;
-  box-shadow: 0 0 18px #ffd70033;
+  box-shadow: 0 0 8px #ffd70033;
   transition: background 0.15s, color 0.15s, transform 0.13s;
 }
 #btn-nombre:hover {
@@ -476,10 +476,10 @@ body.slot #slot-bg { display: block !important; }
 /* --- SOLO FICHAS SOBRE LA MESA PEQUEÑAS EN MOBILE --- */
 @media (max-width: 700px) {
   .apuesta-ficha {
-    width: 18px !important;
-    height: 18px !important;
-    min-width: 18px !important;
-    min-height: 18px !important;
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    min-height: 14px !important;
     left: 50% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
