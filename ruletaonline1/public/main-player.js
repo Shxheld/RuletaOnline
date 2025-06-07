@@ -104,9 +104,7 @@ function renderFichas() {
 renderFichas();
 
 function posicionarDeshacerBtn() {
-  // Espera a que la mesa esté renderizada
   const btn = document.getElementById('deshacerBtn');
-  // Coloca el botón a la derecha de la última casilla (36), ajustado para móvil/grid vertical
   let casillaRef = window.innerWidth <= 700
     ? document.querySelector('[data-casilla-ficha="36"]')
     : document.querySelector('[data-casilla-ficha="36"]');
@@ -137,47 +135,39 @@ function renderMesaApuestas() {
     grid.innerHTML = "";
   }
 
-  // Nuevo layout vertical para móvil
   const isMobile = window.innerWidth <= 700;
   if (isMobile) {
-    // 4 columnas x 9 filas (vertical)
-    // Números ordenados para que visualmente sean tipo "columna"
-    const numVertical = [
-      ["1", "2", "3", "0"],
-      ["4", "5", "6", "00"],
-      ["7", "8", "9", ""],
-      ["10", "11", "12", ""],
-      ["13", "14", "15", ""],
-      ["16", "17", "18", ""],
-      ["19", "20", "21", ""],
-      ["22", "23", "24", ""],
-      ["25", "26", "27", ""],
-    ];
-    // Render números
-    for(let row=0; row<numVertical.length; row++) {
-      for(let col=0; col<4; col++) {
-        const num = numVertical[row][col];
-        if (num) {
-          grid.appendChild(
-            casillaNumDiv(
-              num,
-              col+1, // gridColumn
-              row+1, // gridRow
-              1,
-              (num==="0"||num==="00")?"green":WHEEL_COLORS[num]
-            )
-          );
-        }
+    // 0 y 00 arriba, cada uno ocupa 2 columnas, fila 1
+    grid.appendChild(casillaNumDiv("0", 1, 1, 2, "green cero-doble"));
+    grid.appendChild(casillaNumDiv("00", 3, 1, 2, "green cero-doble"));
+
+    // Números del 1 al 36, 4x9, empezando en fila 2
+    let n = 1;
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 4; col++) {
+        const num = n++;
+        grid.appendChild(
+          casillaNumDiv(
+            num.toString(),
+            col + 1,
+            row + 2,
+            1,
+            WHEEL_COLORS[num]
+          )
+        );
       }
     }
-    // Render docenas y apuestas externas (debajo del grid principal, en filas adicionales, ocupando varias columnas)
-    grid.appendChild(casillaBetOuter("1st12", 1, 10, 2, "doz1"));
-    grid.appendChild(casillaBetOuter("2nd12", 3, 10, 2, "doz2"));
-    grid.appendChild(casillaBetOuter("3rd12", 1, 11, 2, "doz3"));
-    grid.appendChild(casillaBetOuter("1 to 18", 3, 11, 2, "low"));
-    grid.appendChild(casillaBetOuter("◆", 1, 12, 2, "red", "red"));
-    grid.appendChild(casillaBetOuter("◆", 3, 12, 2, "black", "black"));
-    grid.appendChild(casillaBetOuter("19 to 36", 1, 13, 4, "high"));
+
+    // Docenas (más chicas, 2 columnas cada una, justo debajo de los números)
+    grid.appendChild(casillaBetOuter("1st12", 1, 11, 2, "doz1", "dozen"));
+    grid.appendChild(casillaBetOuter("2nd12", 3, 11, 2, "doz2", "dozen"));
+    grid.appendChild(casillaBetOuter("3rd12", 1, 12, 2, "doz3", "dozen"));
+    grid.appendChild(casillaBetOuter("1 to 18", 3, 12, 2, "low", "lowhigh"));
+    grid.appendChild(casillaBetOuter("◆", 1, 13, 1, "red", "red"));
+    grid.appendChild(casillaBetOuter("◆", 2, 13, 1, "black", "black"));
+    grid.appendChild(casillaBetOuter("◈", 3, 13, 1, "even", "even"));
+    grid.appendChild(casillaBetOuter("◈", 4, 13, 1, "odd", "odd"));
+    grid.appendChild(casillaBetOuter("19 to 36", 1, 14, 4, "high", "lowhigh"));
   } else {
     // PC - clásico 3 filas x 12 columnas
     grid.appendChild(casillaNumDiv("0", 1, 1, 2, "green cero-doble"));
@@ -251,7 +241,7 @@ function casillaNumDiv(num, col, row, span, colorClass) {
 }
 function casillaBetOuter(label,col,row,span,tipo,colorClass){
   let outer = document.createElement('div');
-  outer.className = "casilla-bet-outer";
+  outer.className = "casilla-bet-outer" + (colorClass ? ` ${colorClass}` : "");
   outer.style.gridColumn = `${col} / span ${span}`;
   outer.style.gridRow = `${row}`;
   outer.setAttribute('data-casilla-ficha',tipo);
