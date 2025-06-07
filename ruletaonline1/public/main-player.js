@@ -115,9 +115,9 @@ function posicionarDeshacerBtn() {
     btn.style.top = (rect.top - mesaRect.top + rect.height/2 - 10) + 'px';
     btn.style.left = (rect.right - mesaRect.left + 6) + 'px';
     btn.style.margin = '0';
-    btn.style.width = window.innerWidth <= 700 ? '22px' : '36px';
-    btn.style.height = window.innerWidth <= 700 ? '22px' : '36px';
-    btn.style.borderRadius = window.innerWidth <= 700 ? '6px' : '9px';
+    btn.style.width = window.innerWidth <= 700 ? '18px' : '36px';
+    btn.style.height = window.innerWidth <= 700 ? '18px' : '36px';
+    btn.style.borderRadius = window.innerWidth <= 700 ? '5px' : '9px';
     btn.classList.add('cuadrado');
     btn.style.display = 'flex';
     btn.style.alignItems = 'center';
@@ -137,11 +137,13 @@ function renderMesaApuestas() {
 
   const isMobile = window.innerWidth <= 700;
   if (isMobile) {
-    // 0 y 00 arriba, cada uno ocupa 2 columnas, fila 1
-    grid.appendChild(casillaNumDiv("0", 1, 1, 2, "green cero-doble"));
-    grid.appendChild(casillaNumDiv("00", 3, 1, 2, "green cero-doble"));
+    // Fila 1: vacía, "0", "00", vacía (centrado sobre columna 2 y 3)
+    grid.appendChild(casillaNumDiv("", 1, 1, 1, "")); // vacío
+    grid.appendChild(casillaNumDiv("0", 2, 1, 1, "green cero-doble"));
+    grid.appendChild(casillaNumDiv("00", 3, 1, 1, "green cero-doble"));
+    grid.appendChild(casillaNumDiv("", 4, 1, 1, "")); // vacío
 
-    // Números del 1 al 36, 4x9, empezando en fila 2
+    // Números del 1 al 36, 4x9, filas 2 a 10
     let n = 1;
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 4; col++) {
@@ -158,16 +160,19 @@ function renderMesaApuestas() {
       }
     }
 
-    // Docenas (más chicas, 2 columnas cada una, justo debajo de los números)
-    grid.appendChild(casillaBetOuter("1st12", 1, 11, 2, "doz1", "dozen"));
-    grid.appendChild(casillaBetOuter("2nd12", 3, 11, 2, "doz2", "dozen"));
-    grid.appendChild(casillaBetOuter("3rd12", 1, 12, 2, "doz3", "dozen"));
-    grid.appendChild(casillaBetOuter("1 to 18", 3, 12, 2, "low", "lowhigh"));
-    grid.appendChild(casillaBetOuter("◆", 1, 13, 1, "red", "red"));
-    grid.appendChild(casillaBetOuter("◆", 2, 13, 1, "black", "black"));
-    grid.appendChild(casillaBetOuter("◈", 3, 13, 1, "even", "even"));
-    grid.appendChild(casillaBetOuter("◈", 4, 13, 1, "odd", "odd"));
-    grid.appendChild(casillaBetOuter("19 to 36", 1, 14, 4, "high", "lowhigh"));
+    // Fila 11: docenas (una al lado de otra, más pequeñas)
+    grid.appendChild(casillaBetOuter("1st12", 1, 11, 1, "doz1", "dozen"));
+    grid.appendChild(casillaBetOuter("2nd12", 2, 11, 1, "doz2", "dozen"));
+    grid.appendChild(casillaBetOuter("3rd12", 3, 11, 1, "doz3", "dozen"));
+    grid.appendChild(casillaNumDiv("", 4, 11, 1, "")); // espacio
+
+    // Fila 12: Mitades (1 to 18, 19 to 36), ocupando 2 columnas cada una
+    grid.appendChild(casillaBetOuter("1 to 18", 1, 12, 2, "low", "lowhigh"));
+    grid.appendChild(casillaBetOuter("19 to 36", 3, 12, 2, "high", "lowhigh"));
+
+    // Fila 13: Color rojo y negro, cada uno ocupa 2 columnas
+    grid.appendChild(casillaBetOuter("◆", 1, 13, 2, "red", "red"));
+    grid.appendChild(casillaBetOuter("◆", 3, 13, 2, "black", "black"));
   } else {
     // PC - clásico 3 filas x 12 columnas
     grid.appendChild(casillaNumDiv("0", 1, 1, 2, "green cero-doble"));
@@ -197,7 +202,7 @@ function renderMesaApuestas() {
     grid.appendChild(casillaBetOuter("19 to 36",10,5,4,"high"));
   }
 
-  // Fichas sobrepuestas
+  // Fichas sobrepuestas (más pequeñas en móvil)
   let agrupadas = {};
   apuestas.forEach((ap, idx) => {
     if(!agrupadas[ap.casilla]) agrupadas[ap.casilla] = [];
@@ -209,10 +214,10 @@ function renderMesaApuestas() {
       aps.slice(-4).forEach((ap,idx2) => {
         let fichaDiv = document.createElement('div');
         fichaDiv.className = "apuesta-ficha";
-        fichaDiv.style.top = `calc(50% + ${idx2*8}px)`;
+        fichaDiv.style.top = `calc(50% + ${idx2*6}px)`;
         fichaDiv.innerHTML = fichaSVG(FICHAS[ap.fichaIdx].valor, FICHAS[ap.fichaIdx].color, FICHAS[ap.fichaIdx].borde, FICHAS[ap.fichaIdx].rayas, FICHAS[ap.fichaIdx].txt);
-        fichaDiv.style.width = isMobile ? "18px" : "22px";
-        fichaDiv.style.height = isMobile ? "18px" : "22px";
+        fichaDiv.style.width = isMobile ? "12px" : "22px";
+        fichaDiv.style.height = isMobile ? "12px" : "22px";
         cas.appendChild(fichaDiv);
       });
     }
