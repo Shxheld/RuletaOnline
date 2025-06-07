@@ -492,5 +492,47 @@ body.slot #slot-bg { display: block !important; }
     height: 100% !important;
   }
 }
+@media (max-width: 700px) {
+  /* Agrandar fichas sobre la mesa */
+  .apuesta-ficha {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 2;
+    animation: fichaDrop 0.5s cubic-bezier(.23,1.56,.63,1) 1 !important;
+  }
+  .apuesta-ficha svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Agrandar pantalla e input de nombre y aumentar opacidad */
+  #nombre-usuario-container {
+    background: rgba(24,26,35,0.98) !important; /* Más opaco */
+    padding: 0 !important;
+  }
+  #nombre-usuario-titulo {
+    font-size: 2.3em !important;
+    margin-bottom: 18px !important;
+  }
+  #nombre-form {
+    gap: 18px !important;
+  }
+  #nombre-usuario-input {
+    font-size: 1.6em !important;
+    padding: 14px 38px !important;
+    border-radius: 18px !important;
+    margin-bottom: 18px !important;
+  }
+  #btn-nombre {
+    font-size: 1.25em !important;
+    border-radius: 14px !important;
+    padding: 10px 28px !important;
+  }
+}
 
 
