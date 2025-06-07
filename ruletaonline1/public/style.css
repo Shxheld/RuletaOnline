@@ -368,6 +368,7 @@ body.slot #slot-bg { display: block !important; }
   color: #1a1a1a;
   box-shadow: 0 0 12px #ffd70088;
 }
+/* --- FICHAS SOBRE LA MESA: más pequeñas en móvil --- */
 .apuesta-ficha {
   position: absolute;
   width: 54px;
@@ -472,127 +473,21 @@ body.slot #slot-bg { display: block !important; }
   transform: scale(1.08);
 }
 
+/* --- SOLO FICHAS SOBRE LA MESA PEQUEÑAS EN MOBILE --- */
 @media (max-width: 700px) {
-  .casino-mesa-panel {
-    min-width: 0 !important;
-    width: 100vw !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    align-items: flex-end !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  .mesa-casino {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    grid-template-rows: repeat(13, minmax(0, 1fr)) !important;
-    gap: 2px !important;
-    width: 98vw !important;
-    max-width: 98vw !important;
-    margin: 0 auto !important;
-    justify-items: center;
-    align-items: center;
-  }
-  .casilla-num,
-  .casilla-bet-outer,
-  .casilla-bet {
-    font-size: 1em !important;
-    height: 38px !important;
-    min-height: 38px !important;
-    border-radius: 7px !important;
-    padding: 0 2px !important;
-    box-sizing: border-box !important;
-    min-width: 0 !important;
-  }
-  .casilla-num.cero-doble {
-    height: 38px !important;
-    min-height: 38px !important;
-    font-size: 1em !important;
-    grid-column: span 1 !important;
-  }
-  /* Fila superior: "0" y "00" */
-  .mesa-casino .casilla-num[data-casilla-ficha="0"] {
-    grid-column: 2 / span 1 !important;
-    grid-row: 1 !important;
-  }
-  .mesa-casino .casilla-num[data-casilla-ficha="00"] {
-    grid-column: 3 / span 1 !important;
-    grid-row: 1 !important;
-  }
-  .mesa-casino .casilla-bet-outer.dozen:nth-of-type(1) {
-    grid-column: 1 / span 1 !important;
-    grid-row: 11 !important;
-    width: 100% !important;
-  }
-  .mesa-casino .casilla-bet-outer.dozen:nth-of-type(2) {
-    grid-column: 2 / span 1 !important;
-    grid-row: 11 !important;
-    width: 100% !important;
-  }
-  .mesa-casino .casilla-bet-outer.dozen:nth-of-type(3) {
-    grid-column: 3 / span 2 !important;
-    grid-row: 11 !important;
-    width: 100% !important;
-  }
-  .casilla-bet-outer.dozen,
-  .casilla-bet-outer.lowhigh,
-  .casilla-bet-outer.red,
-  .casilla-bet-outer.black {
-    height: 28px !important;
-    min-height: 28px !important;
-    font-size: 0.95em !important;
-    border-radius: 6px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  .mesa-casino .casilla-bet-outer.lowhigh[data-casilla-ficha="low"] {
-    grid-column: 1 / span 2 !important;
-    grid-row: 12 !important;
-    width: 100% !important;
-  }
-  .mesa-casino .casilla-bet-outer.lowhigh[data-casilla-ficha="high"] {
-    grid-column: 3 / span 2 !important;
-    grid-row: 12 !important;
-    width: 100% !important;
-  }
-  .mesa-casino .casilla-bet-outer.red {
-    grid-column: 1 / span 2 !important;
-    grid-row: 13 !important;
-    width: 100% !important;
-  }
-  .mesa-casino .casilla-bet-outer.black {
-    grid-column: 3 / span 2 !important;
-    grid-row: 13 !important;
-    width: 100% !important;
-  }
-  /* Fichas sobrepuestas MUY pequeñas y con animación */
   .apuesta-ficha {
-    width: 11px !important;
-    height: 11px !important;
-    min-width: 11px !important;
-    min-height: 11px !important;
-    z-index: 2;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
     left: 50% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
+    z-index: 2;
     animation: fichaDrop 0.5s cubic-bezier(.23,1.56,.63,1) 1 !important;
   }
-  /* Selector de fichas: tamaño cómodo para tocar */
-  .ficha, .ficha svg {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    min-height: 32px !important;
-  }
-  #deshacerBtn, #deshacerBtn.cuadrado {
-    width: 18px !important;
-    height: 18px !important;
-    font-size: 0.9em !important;
-  }
-  /* Animación para fichas sobrepuestas */
-  @keyframes fichaDrop {
-    0% { transform: translate(-50%,-90%) scale(0.7); opacity: 0.2;}
-    85% { transform: translate(-50%, 8px) scale(1.11);}
-    100% { transform: translate(-50%, -50%) scale(1);}
+  .apuesta-ficha svg {
+    width: 100% !important;
+    height: 100% !important;
   }
 }
