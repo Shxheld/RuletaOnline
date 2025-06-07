@@ -492,20 +492,3 @@ body.slot #slot-bg { display: block !important; }
     height: 100% !important;
   }
 }
-@media (max-width: 700px) {
-  /* Agrandar fichas sobre la mesa */
-  .apuesta-ficha {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    z-index: 2;
-    animation: fichaDrop 0.5s cubic-bezier(.23,1.56,.63,1) 1 !important;
-  }
-  .apuesta-ficha svg {
-    width: 100% !important;
-    height: 100% !important;
-  }
