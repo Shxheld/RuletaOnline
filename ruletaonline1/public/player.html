@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ruleta Americana</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="player ruleta">
+  <div class="background-overlay"></div>
+  <div id="ruleta-bg"></div>
+
+  <div class="casino-header">
+    <span class="casino-title">Ruleta Americana</span>
+    <span class="casino-balance">Saldo: $<span id="balance">1000</span></span>
+  </div>
+
+  <div class="casino-main">
+    <div class="casino-mesa-panel">
+      <div id="fichas" class="casino-fichas"></div>
+      <div id="mesaApuestas">
+        <button id="deshacerBtn" class="cuadrado" title="Deshacer última apuesta">
+          <span style="font-size:2em;">⟲</span>
+        </button>
+        <!-- La mesa/casillas es generada por JS -->
+        <button id="apostarBtn" class="btn-casino">APOSTAR</button>
+      </div>
+      <div id="mensaje"></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN PARA INGRESAR NOMBRE SIEMPRE PRESENTE -->
+  <div id="nombre-usuario-container">
+    <div id="nombre-usuario-titulo">Ingresa tu nombre</div>
+    <form id="nombre-form">
+      <input id="input-nombre" type="text" placeholder="Tu nombre" required>
+      <button id="btn-nombre" type="button">Entrar</button>
+    </form>
+  </div>
+
+  <div class="opacity-slider-container">
+    <span class="opacity-slider-label">Opacidad fondo</span>
+    <input class="opacity-slider" id="opacity-slider" type="range" min="0" max="1" step="0.01" value="0.6">
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="main-player.js"></script>
+</body>
+</html>

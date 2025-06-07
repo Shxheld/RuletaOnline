@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Casino Principal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="menu-principal">
+  <!-- Overlays difuminados y oscuros -->
+  <div class="background-overlay" id="main-bg"></div>
+  <div class="background-overlay" id="ruleta-bg"></div>
+  <div class="background-overlay" id="slot-bg"></div>
+
+  <!-- SLIDER OPACIDAD MENÚ PRINCIPAL -->
+  <div id="main-slider" class="opacity-slider-container">
+    <input type="range" min="0" max="1" step="0.01" value="1" id="mainOpacity" class="opacity-slider">
+  </div>
+  <!-- SLIDER OPACIDAD RULETA -->
+  <div id="ruleta-slider" class="opacity-slider-container">
+    <input type="range" min="0" max="1" step="0.01" value="1" id="ruletaOpacity" class="opacity-slider">
+  </div>
+  <!-- SLIDER OPACIDAD SLOT -->
+  <div id="slot-slider" class="opacity-slider-container">
+    <input type="range" min="0" max="1" step="0.01" value="1" id="slotOpacity" class="opacity-slider">
+  </div>
+
+  <!-- MENÚ PRINCIPAL -->
+  <div id="main-menu" class="casino-main-menu visible">
+    <h1 class="casino-big-title">Casino Web</h1>
+    <div class="casino-options">
+      <button class="casino-option" id="btn-ruleta">Ruleta</button>
+      <button class="casino-option" id="btn-slot">Tragamonedas</button>
+    </div>
+  </div>
+
+  <!-- RULETA -->
+  <div id="ruleta-section" class="casino-section">
+    <div class="casino-header">
+      <button id="volverPrincipal1" class="btn-volver" title="Volver al menú principal">
+        <span>&larr;</span>
+      </button>
+      <div class="casino-title">Ruleta Americana</div>
+      <div class="casino-balance casino-balance-glow">Saldo: $<span id="balance">100000</span></div>
+    </div>
+    <div class="casino-main">
+      <div class="casino-ruleta-panel">
+        <div class="ruleta-canvas-container">
+          <canvas id="ruleta" width="1300" height="1300"></canvas>
+          <div class="bola-ruleta" id="bola-ruleta"></div>
+          <div class="flecha-indicador" id="flecha-indicador"></div>
+        </div>
+        <div id="ruleta-resultado"></div>
+      </div>
+      <div class="casino-mesa-panel">
+        <div class="casino-fichas" id="fichas"></div>
+        <div id="mesaApuestas">
+          <div class="mesa-casino"></div>
+          <button id="deshacerBtn" title="Deshacer última apuesta">
+            <span style="font-size:2em;">⟲</span>
+          </button>
+          <div class="btns-ruleta">
+            <button id="girarBtn" disabled>GIRAR RULETA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAGAMONEDAS -->
+  <div id="slot-section" class="casino-section">
+    <div class="casino-header">
+      <button id="volverPrincipal2" class="btn-volver" title="Volver al menú principal">
+        <span>&larr;</span>
+      </button>
+      <div class="casino-title">Tragamonedas</div>
+      <div class="casino-balance">Saldo: $<span id="balance-slot">100000</span></div>
+    </div>
+    <div class="slot-content">
+      <h2 style="text-align:center; margin-top:100px; color:#fff; font-size:3em;">Próximamente: Tragamonedas</h2>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ruleta Americana </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="host ruleta">
+  <div class="background-overlay"></div>
+  <div id="ruleta-bg"></div>
+
+  <div class="casino-header">
+    <span class="casino-title">Ruleta Americana</span>
+    <span id="participantes" class="casino-balance">Participantes: <span id="playerCount">0</span></span>
+  </div>
+
+  <div class="casino-main host-center">
+    <div class="casino-ruleta-panel">
+      <div class="ruleta-canvas-container" style="position:relative;">
+        <canvas id="ruleta" width="700" height="700"></canvas>
+        <div id="flecha-indicador" class="flecha-indicador"></div>
+      </div>
+      <button id="girarBtn" class="btn-casino">GIRAR RULETA</button>
+      <div id="ruleta-resultado" style="text-align:center; margin-top:24px; font-size:2em; color:#ffd700;"></div>
+      <audio id="tick-audio" src="tick.mp3" preload="auto"></audio>
+    </div>
+    <div class="tablero-jugadores" id="tablero-jugadores" style="top: 110px; right: 54px;">
+      <h2>Jugadores</h2>
+      <ul id="jugadores-lista">
+        <!-- Los jugadores aparecerán aquí -->
+      </ul>
+      <h3>Apuestas actuales</h3>
+      <ul id="apuestas-lista">
+        <!-- Apuestas aparecerán aquí -->
+      </ul>
+    </div>
+  </div>
+
+  <div class="opacity-slider-container">
+    <span class="opacity-slider-label">Opacidad fondo</span>
+    <input class="opacity-slider" id="opacity-slider" type="range" min="0" max="1" step="0.01" value="0.6">
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="main-host.js"></script>
+</body>
+</html>
