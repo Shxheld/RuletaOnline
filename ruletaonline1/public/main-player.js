@@ -37,21 +37,22 @@ const btnNombre = document.getElementById('btn-nombre');
 const nombreUsuarioContainer = document.getElementById('nombre-usuario-container');
 
 // Bloquear scroll y fondo hasta que se ingrese el nombre
-document.body.style.overflow = "hidden";
-inputNombre.focus();
+const desbloquearScroll = () => { document.body.style.overflow = ""; };
+const bloquearScroll = () => { document.body.style.overflow = "hidden"; };
 
-// Usar evento submit del formulario para compatibilidad móvil
+bloquearScroll();
+setTimeout(() => { try { inputNombre.focus(); } catch {} }, 200);
+
 nombreForm.addEventListener('submit', function(e) {
   e.preventDefault();
   const val = inputNombre.value.trim();
   if (!val) return alert("Debes escribir tu nombre.");
   nombre = val;
   nombreUsuarioContainer.style.display = "none";
-  document.body.style.overflow = ""; // habilita scroll
+  desbloquearScroll();
   socket.emit('registro', {nombre, saldo});
 });
 
-// Permitir "Enter" en el input
 inputNombre.addEventListener('keyup', (e) => {
   if(e.key === "Enter") {
     btnNombre.click();
@@ -107,16 +108,15 @@ function posicionarDeshacerBtn() {
   const btn = document.getElementById('deshacerBtn');
   const casilla36 = document.querySelector('[data-casilla-ficha="36"]');
   if (btn && casilla36) {
-    // Posiciona el botón justo a la derecha de la casilla 36
     const rect = casilla36.getBoundingClientRect();
     const mesaRect = mesa.getBoundingClientRect();
     btn.style.position = 'absolute';
-    btn.style.top = (rect.top - mesaRect.top + rect.height/2 - 28) + 'px';
-    btn.style.left = (rect.right - mesaRect.left + 16) + 'px'; // 16px de separación
+    btn.style.top = (rect.top - mesaRect.top + rect.height/2 - 18) + 'px';
+    btn.style.left = (rect.right - mesaRect.left + 8) + 'px'; // Menos separación para pantallas chicas
     btn.style.margin = '0';
-    btn.style.width = '56px';
-    btn.style.height = '56px';
-    btn.style.borderRadius = '13px';
+    btn.style.width = '36px';
+    btn.style.height = '36px';
+    btn.style.borderRadius = '9px';
     btn.classList.add('cuadrado');
     btn.style.display = 'flex';
     btn.style.alignItems = 'center';
@@ -124,7 +124,6 @@ function posicionarDeshacerBtn() {
   }
 }
 
-// ====== MESA Y APUESTAS ======
 function renderMesaApuestas() {
   let grid = mesa.querySelector('.mesa-casino');
   if (!grid) {
@@ -173,14 +172,16 @@ function renderMesaApuestas() {
       aps.slice(-4).forEach((ap,idx2) => {
         let fichaDiv = document.createElement('div');
         fichaDiv.className = "apuesta-ficha";
-        fichaDiv.style.top = `calc(50% + ${idx2*14.5}px)`;
+        fichaDiv.style.top = `calc(50% + ${idx2*8}px)`;
         fichaDiv.innerHTML = fichaSVG(FICHAS[ap.fichaIdx].valor, FICHAS[ap.fichaIdx].color, FICHAS[ap.fichaIdx].borde, FICHAS[ap.fichaIdx].rayas, FICHAS[ap.fichaIdx].txt);
+        fichaDiv.style.width = "22px";
+        fichaDiv.style.height = "22px";
         cas.appendChild(fichaDiv);
       });
     }
   });
 
-  setTimeout(posicionarDeshacerBtn, 50); // Espera a que se pinte el DOM
+  setTimeout(posicionarDeshacerBtn, 50);
 }
 renderMesaApuestas();
 
@@ -276,13 +277,3 @@ socket.on('resultado', data => {
     renderMesaApuestas();
   }, 3500);
 });
-
-// Slider funcional para overlay oscuro real
-const overlay = document.querySelector('.background-overlay');
-const opacitySlider = document.getElementById('opacity-slider');
-if (overlay && opacitySlider) {
-  opacitySlider.addEventListener('input', (e) => {
-    overlay.style.opacity = e.target.value;
-  });
-  overlay.style.opacity = opacitySlider.value;
-}
