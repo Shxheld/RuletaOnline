@@ -473,55 +473,110 @@ body.slot #slot-bg { display: block !important; }
 }
 
 @media (max-width: 700px) {
-  .mesa-casino {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr) !important;
-    grid-template-rows: repeat(13, 1fr) !important;
-    gap: 2px !important;
-    width: 96vw !important;
-    max-width: 96vw !important;
-    margin: 0 auto !important;
-    justify-items: center;
-    align-items: center;
-  }
   .casino-mesa-panel {
     min-width: 0 !important;
     width: 100vw !important;
     margin: 0 !important;
     padding: 0 !important;
-    align-items: center !important;
+    align-items: flex-end !important; /* Centra más hacia la derecha */
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .mesa-casino {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-rows: repeat(13, minmax(0, 1fr)) !important;
+    gap: 2px !important;
+    width: 98vw !important;
+    max-width: 98vw !important;
+    margin: 0 auto !important;
+    justify-items: center;
+    align-items: center;
   }
   .casilla-num,
   .casilla-bet-outer,
   .casilla-bet {
     font-size: 1em !important;
-    height: 32px !important;
-    min-height: 32px !important;
-    border-radius: 7px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    border-radius: 6px !important;
     padding: 0 1px !important;
     box-sizing: border-box !important;
+    min-width: 0 !important;
   }
   .casilla-num.cero-doble {
-    height: 32px !important;
-    min-height: 32px !important;
-    font-size: 1.05em !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    font-size: 1em !important;
     grid-column: span 1 !important;
+  }
+  /* Fila superior: "0" y "00" */
+  .mesa-casino .casilla-num[data-casilla-ficha="0"] {
+    grid-column: 2 / span 1 !important;
+    grid-row: 1 !important;
+  }
+  .mesa-casino .casilla-num[data-casilla-ficha="00"] {
+    grid-column: 3 / span 1 !important;
+    grid-row: 1 !important;
+  }
+  /* Docenas: cada una ocupa 4/3 columnas (aprox 1.33 columnas) */
+  .mesa-casino .casilla-bet-outer.dozen:nth-of-type(1) { /* 1st12 */
+    grid-column: 1 / span 1 !important;
+    grid-row: 11 !important;
+    width: 100% !important;
+  }
+  .mesa-casino .casilla-bet-outer.dozen:nth-of-type(2) { /* 2nd12 */
+    grid-column: 2 / span 1 !important;
+    grid-row: 11 !important;
+    width: 100% !important;
+  }
+  .mesa-casino .casilla-bet-outer.dozen:nth-of-type(3) { /* 3rd12 */
+    grid-column: 3 / span 2 !important;
+    grid-row: 11 !important;
+    width: 100% !important;
   }
   .casilla-bet-outer.dozen,
   .casilla-bet-outer.lowhigh,
   .casilla-bet-outer.red,
   .casilla-bet-outer.black {
-    height: 25px !important;
-    min-height: 25px !important;
+    height: 23px !important;
+    min-height: 23px !important;
     font-size: 0.95em !important;
-    border-radius: 6px !important;
+    border-radius: 5px !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
+  /* Mitades y colores ocupan 2 columnas cada uno */
+  .mesa-casino .casilla-bet-outer.lowhigh[data-casilla-ficha="low"] {
+    grid-column: 1 / span 2 !important;
+    grid-row: 12 !important;
+    width: 100% !important;
+  }
+  .mesa-casino .casilla-bet-outer.lowhigh[data-casilla-ficha="high"] {
+    grid-column: 3 / span 2 !important;
+    grid-row: 12 !important;
+    width: 100% !important;
+  }
+  .mesa-casino .casilla-bet-outer.red {
+    grid-column: 1 / span 2 !important;
+    grid-row: 13 !important;
+    width: 100% !important;
+  }
+  .mesa-casino .casilla-bet-outer.black {
+    grid-column: 3 / span 2 !important;
+    grid-row: 13 !important;
+    width: 100% !important;
+  }
+  /* Fichas sobrepuestas mucho más pequeñas */
   .apuesta-ficha {
-    width: 13px !important;
-    height: 13px !important;
-    min-width: 13px !important;
-    min-height: 13px !important;
+    width: 11px !important;
+    height: 11px !important;
+    min-width: 11px !important;
+    min-height: 11px !important;
     z-index: 2;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
   }
   .ficha, .ficha svg {
     width: 22px !important;
