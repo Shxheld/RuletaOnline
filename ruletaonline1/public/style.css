@@ -26,9 +26,8 @@ body.player {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  /* MODIFICADO: más opaco y más grande (por si hay scroll o pantallas grandes) */
-  background: rgba(20,24,28,0.92); /* antes 1, ahora menos opaco para ver contenido pero más oscuro que el original */
-  opacity: var(--bg-opacity, 0.85); /* valor por defecto más alto */
+  background: rgba(20,24,28,0.92);
+  opacity: var(--bg-opacity, 0.85);
   transition: opacity 0.4s;
   will-change: opacity;
 }
@@ -523,7 +522,6 @@ body.slot #slot-bg { display: block !important; }
   transform: scale(1.08);
 }
 
-
 /* ---------------- RESPONSIVE (MÓVIL) ------------------ */
 @media (max-width: 1200px) {
   #mesaApuestas, .casino-main, .casino-mesa-panel {
@@ -572,11 +570,14 @@ body.slot #slot-bg { display: block !important; }
     font-size: 0.85em !important;
   }
   .mesa-casino {
-    grid-template-columns: repeat(7, minmax(40px,1fr));
-    grid-template-rows: repeat(6, minmax(32px, 1fr));
-    gap: 7px 7px;
-    margin-top: 10px;
+    grid-template-columns: repeat(7, minmax(40px,1fr)) !important;
+    grid-template-rows: repeat(6, minmax(32px, 1fr)) !important;
+    gap: 7px 7px !important;
+    margin-top: 10px !important;
     font-size: 0.7em !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
   .ficha, .apuesta-ficha {
     width: 36px !important;
@@ -625,8 +626,6 @@ body.slot #slot-bg { display: block !important; }
   .casino-balance { font-size: 0.75em !important; padding: 6px 10px !important; }
   .opacity-slider { width: 90px !important; height: 22px !important;}
 }
-
-/* ... (TODO: tu CSS completo igual que antes, pero con los siguientes cambios al final) ... */
 
 /* -------------------- MOBILE FIXES PERSONALIZADOS ------------------ */
 @media (max-width: 768px){
@@ -722,6 +721,7 @@ body.slot #slot-bg { display: block !important; }
     font-size: 1.1em !important;
     place-items: center !important;
     justify-items: stretch !important;
+    overflow-x: hidden !important;
   }
   .casilla-num, .casilla-bet-outer, .casilla-bet {
     min-width: 0 !important;
