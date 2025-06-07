@@ -36,6 +36,10 @@ const inputNombre = document.getElementById('input-nombre');
 const btnNombre = document.getElementById('btn-nombre');
 const nombreUsuarioContainer = document.getElementById('nombre-usuario-container');
 
+// Bloquear scroll y fondo hasta que se ingrese el nombre
+document.body.style.overflow = "hidden";
+inputNombre.focus();
+
 // Usar evento submit del formulario para compatibilidad móvil
 nombreForm.addEventListener('submit', function(e) {
   e.preventDefault();
@@ -43,7 +47,15 @@ nombreForm.addEventListener('submit', function(e) {
   if (!val) return alert("Debes escribir tu nombre.");
   nombre = val;
   nombreUsuarioContainer.style.display = "none";
+  document.body.style.overflow = ""; // habilita scroll
   socket.emit('registro', {nombre, saldo});
+});
+
+// Permitir "Enter" en el input
+inputNombre.addEventListener('keyup', (e) => {
+  if(e.key === "Enter") {
+    btnNombre.click();
+  }
 });
 
 function fichaSVG(valor, color, borde, rayas, txt) {
