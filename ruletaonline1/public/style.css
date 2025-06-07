@@ -240,7 +240,7 @@ body.slot #slot-bg { display: block !important; }
   margin-left: 10px;
 }
 .ficha {
-  width: 70px; height: 70px;
+  width: 40px; height: 40px;
   cursor: pointer;
   border-radius: 50%;
   border: 2px solid #ffd700bb;
@@ -256,7 +256,7 @@ body.slot #slot-bg { display: block !important; }
   border-color: #00ffd0; 
   box-shadow: 0 0 14px #00ffd0aa, 0 0 0 6px #ffd70033;
 }
-.ficha svg { width: 62px; height: 62px; }
+.ficha svg { width: 32px; height: 32px; }
 .mesa-casino {
   display: grid;
   grid-template-columns: 45px repeat(12, 45px) 45px;
@@ -425,7 +425,7 @@ body.slot #slot-bg { display: block !important; }
   transition: opacity 0.4s;
 }
 #nombre-usuario-titulo {
-  font-size: 3.6em;
+  font-size: 1.6em;
   color: #ffd700;
   font-weight: bold;
   letter-spacing: 1.5px;
@@ -439,8 +439,8 @@ body.slot #slot-bg { display: block !important; }
   gap: 8px;
 }
 #nombre-usuario-input {
-  font-size: 3.12em;
-  padding: 16px 28px;
+  font-size: 1.12em;
+  padding: 6px 18px;
   border-radius: 12px;
   border: 2px solid #ffd700bb;
   background: #23253b;
