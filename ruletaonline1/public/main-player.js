@@ -211,10 +211,10 @@ function renderMesaApuestas() {
       aps.slice(-4).forEach((ap,idx2) => {
         let fichaDiv = document.createElement('div');
         fichaDiv.className = "apuesta-ficha";
-        fichaDiv.style.top = `calc(50% + ${idx2*5}px)`;
+        fichaDiv.style.top = `calc(50% + ${idx2*6}px)`;
         fichaDiv.innerHTML = fichaSVG(FICHAS[ap.fichaIdx].valor, FICHAS[ap.fichaIdx].color, FICHAS[ap.fichaIdx].borde, FICHAS[ap.fichaIdx].rayas, FICHAS[ap.fichaIdx].txt);
-        fichaDiv.style.width = isMobile ? "11px" : "22px";
-        fichaDiv.style.height = isMobile ? "11px" : "22px";
+        fichaDiv.style.width = window.innerWidth <= 700 ? "18px" : "54px";
+        fichaDiv.style.height = window.innerWidth <= 700 ? "18px" : "54px";
         cas.appendChild(fichaDiv);
       });
     }
