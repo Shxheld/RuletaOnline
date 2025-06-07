@@ -62,7 +62,7 @@ inputNombre.addEventListener('keyup', (e) => {
 function fichaSVG(valor, color, borde, rayas, txt) {
   let txtVal = (valor>=1000) ? (valor/1000)+"K" : valor;
   return `
-  <svg width="56" height="56" viewBox="0 0 54 54">
+  <svg width="40" height="40" viewBox="0 0 40 40">
     <defs>
       <radialGradient id="fg${valor}" cx="50%" cy="50%" r="50%">
         <stop offset="0%" stop-color="#fff" stop-opacity="0.97"/>
@@ -70,21 +70,21 @@ function fichaSVG(valor, color, borde, rayas, txt) {
         <stop offset="100%" stop-color="#222" />
       </radialGradient>
     </defs>
-    <circle cx="27" cy="27" r="25" fill="url(#fg${valor})" stroke="${borde}" stroke-width="3"/>
-    <circle cx="27" cy="27" r="15" fill="#fff" stroke="${borde}" stroke-width="1.3"/>
-    <circle cx="27" cy="27" r="10" fill="#efefef"/>
+    <circle cx="20" cy="20" r="18" fill="url(#fg${valor})" stroke="${borde}" stroke-width="2"/>
+    <circle cx="20" cy="20" r="11" fill="#fff" stroke="${borde}" stroke-width="1"/>
+    <circle cx="20" cy="20" r="7" fill="#efefef"/>
     ${[...Array(8)].map((_,i)=>{
       let ang = i*45;
-      return `<rect x="25" y="2.5" rx="2" ry="2" width="4" height="9"
-        fill="${rayas}" stroke="${borde}" stroke-width="0.6"
-        transform="rotate(${ang} 27 27)"/>`
+      return `<rect x="18" y="2" rx="1" ry="1" width="4" height="6"
+        fill="${rayas}" stroke="${borde}" stroke-width="0.4"
+        transform="rotate(${ang} 20 20)"/>`
     }).join("")}
-    <text x="27" y="32.5" text-anchor="middle"
-      font-size="17" font-family="'Montserrat',Arial,sans-serif"
-      fill="#222" stroke="#fff" stroke-width="2" paint-order="stroke"
+    <text x="20" y="25" text-anchor="middle"
+      font-size="11" font-family="'Montserrat',Arial,sans-serif"
+      fill="#222" stroke="#fff" stroke-width="1.2" paint-order="stroke"
       font-weight="bold" dominant-baseline="middle">$${txtVal}</text>
-    <text x="27" y="32.5" text-anchor="middle"
-      font-size="17" font-family="'Montserrat',Arial,sans-serif"
+    <text x="20" y="25" text-anchor="middle"
+      font-size="11" font-family="'Montserrat',Arial,sans-serif"
       fill="#222"
       font-weight="bold" dominant-baseline="middle">$${txtVal}</text>
   </svg>
@@ -137,11 +137,9 @@ function renderMesaApuestas() {
 
   const isMobile = window.innerWidth <= 700;
   if (isMobile) {
-    // Fila 1: vacía, "0", "00", vacía (centrado sobre columna 2 y 3)
-    grid.appendChild(casillaNumDiv("", 1, 1, 1, "")); // vacío
+    // Fila 1: "0" y "00" ocupando columnas 2 y 3
     grid.appendChild(casillaNumDiv("0", 2, 1, 1, "green cero-doble"));
     grid.appendChild(casillaNumDiv("00", 3, 1, 1, "green cero-doble"));
-    grid.appendChild(casillaNumDiv("", 4, 1, 1, "")); // vacío
 
     // Números del 1 al 36, 4x9, filas 2 a 10
     let n = 1;
@@ -160,13 +158,12 @@ function renderMesaApuestas() {
       }
     }
 
-    // Fila 11: docenas (una al lado de otra, más pequeñas)
-    grid.appendChild(casillaBetOuter("1st12", 1, 11, 1, "doz1", "dozen"));
-    grid.appendChild(casillaBetOuter("2nd12", 2, 11, 1, "doz2", "dozen"));
-    grid.appendChild(casillaBetOuter("3rd12", 3, 11, 1, "doz3", "dozen"));
-    grid.appendChild(casillaNumDiv("", 4, 11, 1, "")); // espacio
+    // Fila 11: docenas (cada una ocupa más de 1 columna, total 4 columnas)
+    grid.appendChild(casillaBetOuter("1st12", 1, 11, 4/3, "doz1", "dozen"));
+    grid.appendChild(casillaBetOuter("2nd12", 1+4/3, 11, 4/3, "doz2", "dozen"));
+    grid.appendChild(casillaBetOuter("3rd12", 1+8/3, 11, 4/3, "doz3", "dozen"));
 
-    // Fila 12: Mitades (1 to 18, 19 to 36), ocupando 2 columnas cada una
+    // Fila 12: mitades (1 to 18, 19 to 36), cada una ocupa 2 columnas
     grid.appendChild(casillaBetOuter("1 to 18", 1, 12, 2, "low", "lowhigh"));
     grid.appendChild(casillaBetOuter("19 to 36", 3, 12, 2, "high", "lowhigh"));
 
@@ -214,10 +211,10 @@ function renderMesaApuestas() {
       aps.slice(-4).forEach((ap,idx2) => {
         let fichaDiv = document.createElement('div');
         fichaDiv.className = "apuesta-ficha";
-        fichaDiv.style.top = `calc(50% + ${idx2*6}px)`;
+        fichaDiv.style.top = `calc(50% + ${idx2*5}px)`;
         fichaDiv.innerHTML = fichaSVG(FICHAS[ap.fichaIdx].valor, FICHAS[ap.fichaIdx].color, FICHAS[ap.fichaIdx].borde, FICHAS[ap.fichaIdx].rayas, FICHAS[ap.fichaIdx].txt);
-        fichaDiv.style.width = isMobile ? "12px" : "22px";
-        fichaDiv.style.height = isMobile ? "12px" : "22px";
+        fichaDiv.style.width = isMobile ? "11px" : "22px";
+        fichaDiv.style.height = isMobile ? "11px" : "22px";
         cas.appendChild(fichaDiv);
       });
     }
