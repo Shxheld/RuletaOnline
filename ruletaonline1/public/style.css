@@ -26,8 +26,9 @@ body.player {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  background: rgba(20,24,28,1);
-  opacity: var(--bg-opacity, 0.6);
+  /* MODIFICADO: más opaco y más grande (por si hay scroll o pantallas grandes) */
+  background: rgba(20,24,28,0.92); /* antes 1, ahora menos opaco para ver contenido pero más oscuro que el original */
+  opacity: var(--bg-opacity, 0.85); /* valor por defecto más alto */
   transition: opacity 0.4s;
   will-change: opacity;
 }
@@ -628,7 +629,7 @@ body.slot #slot-bg { display: block !important; }
 /* ... (TODO: tu CSS completo igual que antes, pero con los siguientes cambios al final) ... */
 
 /* -------------------- MOBILE FIXES PERSONALIZADOS ------------------ */
-@media (max-width: 768px) {
+@media (max-width: 768px){
   /* Overlay del nombre de usuario: ocupa todo y centra */
   #nombre-usuario-container {
     left: 0 !important;
