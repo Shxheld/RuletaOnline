@@ -477,10 +477,10 @@ body.slot #slot-bg { display: block !important; }
 /* --- SOLO FICHAS SOBRE LA MESA PEQUEÑAS EN MOBILE --- */
 @media (max-width: 700px) {
   .apuesta-ficha {
-    width: 14px !important;
-    height: 14px !important;
-    min-width: 14px !important;
-    min-height: 14px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
     left: 50% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
