@@ -68,7 +68,7 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     jugadores = jugadores.filter(j => j.id !== socket.id);
     apuestas = apuestas.filter(a => a.playerId !== socket.id);
-    guardarApuestas(); // <-- 
+    guardarApuestas(); // <-- GUARDAR
     emitirEstado();
   });
 
@@ -79,4 +79,3 @@ io.on('connection', socket => {
 
 const PORT = process.env.PORT || 8080;
 http.listen(PORT, () => console.log('Servidor en puerto', PORT));
-console.log('Usando versión persistente de apuestas')
