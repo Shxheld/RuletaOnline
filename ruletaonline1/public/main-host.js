@@ -1,4 +1,4 @@
-// ========== main-host.js mejorado (giro realista, flecha a la izquierda, sin rebote) ==========
+// ========== main-host.js sincronizado con backend y base de datos ==========
 
 const socket = io();
 
@@ -31,7 +31,7 @@ let apuestasActuales = [];
 let jugadores = [];
 let ruletaGirando = false;
 
-// ========== FLECHA EN EL BORDE IZQUIERDO (9 EN PUNTO, 180 grados) ==========
+// ========== FLECHA EN EL BORDE IZQUIERDO ==========
 function updateFlecha() {
   flecha.style.position = "absolute";
   flecha.style.width = "0";
@@ -57,7 +57,7 @@ if (opacitySlider) {
   setBgOpacity(opacitySlider.value);
 }
 
-// Centrado absoluto de la ruleta (tanto vertical como horizontal)
+// Centrado absoluto de la ruleta
 function centerRuletaContainer() {
   const main = document.querySelector('.casino-main.host-center');
   if (main) {
@@ -167,7 +167,6 @@ socket.on('update', data => {
 });
 
 // ========== SONIDO "TICK" ==========
-// (el sonido tick.mp3 debe estar en la misma carpeta)
 function playTick() {
   if (!tickAudio) return;
   tickAudio.pause();
@@ -176,7 +175,7 @@ function playTick() {
   tickAudio.play();
 }
 
-// ========== ANIMACIÓN DE GIRO REALISTA (suave, sin rebote) ==========
+// ========== ANIMACIÓN DE GIRO REALISTA ==========
 
 function easeOutCubic(x) {
   return 1 - Math.pow(1 - x, 3);
@@ -197,15 +196,12 @@ function girarRuleta() {
   const n = WHEEL_ORDER.length;
 
   // Flecha a la IZQUIERDA (9 en punto = PI radianes)
-  // Queremos que el centro del sector ganador quede en PI radianes.
   const angTarget = Math.PI - ((idx + 0.5)/n)*2*Math.PI;
-
-  // Giro: vueltas iniciales, desaceleración muy suave al final
   const vueltas = 5 + Math.random()*1.2;
   const angStart = 2*Math.PI*vueltas + angTarget;
 
   const t0 = Date.now();
-  const duracion = 8500; // 8.5 segundos para giro realista y lento
+  const duracion = 8500; // 8.5 segundos
   let stopped = false;
   let lastSector = null;
 
@@ -213,7 +209,7 @@ function girarRuleta() {
     if (stopped) return;
     let t = Date.now()-t0;
     let frac = Math.min(t/duracion,1);
-    let ease = easeOutCubic(frac); // Suave, sin rebote
+    let ease = easeOutCubic(frac);
     let ang = angStart*(1-ease) + angTarget*ease;
 
     // Sonido "tick" por sector
@@ -237,10 +233,9 @@ function girarRuleta() {
       mostrarResultado(idx);
       ruletaGirando = false;
       girarBtn.disabled = false;
+      // El host SOLO informa el resultado, el backend limpia apuestas y emite el update
       socket.emit('resultado', {ganador, idx});
       setTimeout(()=>{
-        apuestasActuales = [];
-        renderApuestas();
         ruletaResultado.innerText = "";
       }, 4000);
     }
