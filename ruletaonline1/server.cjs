@@ -68,7 +68,7 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     jugadores = jugadores.filter(j => j.id !== socket.id);
     apuestas = apuestas.filter(a => a.playerId !== socket.id);
-    guardarApuestas(); // <-- GUARDAR
+    guardarApuestas(); // <-- 
     emitirEstado();
   });
 
