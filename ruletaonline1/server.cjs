@@ -2,77 +2,66 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const fs = require('fs');
-const path = require('path');
+const { Pool } = require('pg');
 
-// Sirve archivos estáticos desde la carpeta 'public'
-app.use(express.static('public'));
-
-// Opcional: redirige la raíz a host.html o index.html
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/host.html');
+// Usa la URL de la variable de entorno (Railway la inyecta automáticamente)
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
 });
 
+app.use(express.static('public'));
+
 let jugadores = [];
-let apuestas = [];
 
-// Archivo donde se guardan las apuestas persistentes
-const APU_FILE = path.join(__dirname, 'apuestas.json');
+async function getApuestas() {
+  const result = await pool.query('SELECT * FROM apuestas');
+  return result.rows;
+}
 
-// Cargar apuestas al iniciar el servidor (si el archivo existe)
-if (fs.existsSync(APU_FILE)) {
-  try {
-    apuestas = JSON.parse(fs.readFileSync(APU_FILE, 'utf8'));
-  } catch (e) {
-    console.error('Error leyendo apuestas.json:', e);
-    apuestas = [];
+async function saveApuestas(playerId, playerName, apuestasList) {
+  await pool.query('DELETE FROM apuestas WHERE player_id = $1', [playerId]);
+  for (const ap of apuestasList) {
+    await pool.query(
+      'INSERT INTO apuestas (player_id, player_name, monto, tipo, valor) VALUES ($1, $2, $3, $4, $5)',
+      [playerId, playerName, ap.monto, ap.tipo, ap.valor]
+    );
   }
 }
 
-// Función para guardar apuestas cada vez que cambian
-function guardarApuestas() {
-  fs.writeFile(APU_FILE, JSON.stringify(apuestas, null, 2), err => {
-    if (err) console.error('Error guardando apuestas.json:', err);
-  });
+async function clearApuestas() {
+  await pool.query('DELETE FROM apuestas');
 }
 
 io.on('connection', socket => {
   let jugadorActual = null;
 
-  socket.on('registro', data => {
+  socket.on('registro', async data => {
     jugadorActual = { id: socket.id, name: data.nombre, saldo: data.saldo };
     if (!jugadores.find(j => j.id === socket.id)) {
       jugadores.push(jugadorActual);
-      emitirEstado();
+      await emitirEstado();
     }
   });
 
-  socket.on('apostar', data => {
-    // Guarda apuestas y emite estado
-    apuestas = apuestas.filter(a => a.playerId !== socket.id);
-    (data.apuestas || []).forEach(ap => {
-      apuestas.push({ ...ap, player: data.nombre, playerId: socket.id, monto: ap.monto, tipo: ap.tipo, valor: ap.valor });
-    });
-    guardarApuestas(); // <-- GUARDAR
-    emitirEstado();
+  socket.on('apostar', async data => {
+    await saveApuestas(socket.id, data.nombre, data.apuestas || []);
+    await emitirEstado();
   });
 
-  socket.on('resultado', data => {
+  socket.on('resultado', async data => {
     io.emit('resultado', data);
-    // Reset apuestas tras el giro
-    apuestas = [];
-    guardarApuestas(); // <-- GUARDAR
-    emitirEstado();
+    await clearApuestas();
+    await emitirEstado();
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     jugadores = jugadores.filter(j => j.id !== socket.id);
-    apuestas = apuestas.filter(a => a.playerId !== socket.id);
-    guardarApuestas(); // <-- GUARDAR
-    emitirEstado();
+    await pool.query('DELETE FROM apuestas WHERE player_id = $1', [socket.id]);
+    await emitirEstado();
   });
 
-  function emitirEstado() {
+  async function emitirEstado() {
+    const apuestas = await getApuestas();
     io.emit('update', { jugadores, apuestas });
   }
 });
