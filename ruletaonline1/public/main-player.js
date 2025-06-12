@@ -37,7 +37,8 @@ const inputNombre = document.getElementById('input-nombre');
 const btnNombre = document.getElementById('btn-nombre');
 const nombreUsuarioContainer = document.getElementById('nombre-usuario-container');
 
-btnNombre.onclick = () => {
+nombreForm.onsubmit = (e) => {
+  e.preventDefault(); // <- ¡Esto previene el refresh!
   const val = inputNombre.value.trim();
   if (!val) return alert("Debes escribir tu nombre.");
   nombre = val;
