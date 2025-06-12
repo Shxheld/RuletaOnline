@@ -1,3 +1,5 @@
+// ========== main-player.js sincronizado con backend y base de datos ==========
+
 const socket = io();
 
 const FICHAS = [
@@ -30,39 +32,23 @@ const mensajeDiv = document.getElementById('mensaje');
 const deshacerBtn = document.getElementById('deshacerBtn');
 const apostarBtn = document.getElementById('apostarBtn');
 
-// NOMBRE
 const nombreForm = document.getElementById('nombre-form');
-const inputNombre = document.getElementById('nombre-usuario-input');
+const inputNombre = document.getElementById('input-nombre');
 const btnNombre = document.getElementById('btn-nombre');
 const nombreUsuarioContainer = document.getElementById('nombre-usuario-container');
 
-// Bloquear scroll y fondo hasta que se ingrese el nombre
-const desbloquearScroll = () => { document.body.style.overflow = ""; };
-const bloquearScroll = () => { document.body.style.overflow = "hidden"; };
-
-bloquearScroll();
-setTimeout(() => { try { inputNombre.focus(); } catch {} }, 200);
-
-nombreForm.addEventListener('submit', function(e) {
-  e.preventDefault();
+btnNombre.onclick = () => {
   const val = inputNombre.value.trim();
   if (!val) return alert("Debes escribir tu nombre.");
   nombre = val;
   nombreUsuarioContainer.style.display = "none";
-  desbloquearScroll();
   socket.emit('registro', {nombre, saldo});
-});
-
-inputNombre.addEventListener('keyup', (e) => {
-  if(e.key === "Enter") {
-    btnNombre.click();
-  }
-});
+};
 
 function fichaSVG(valor, color, borde, rayas, txt) {
   let txtVal = (valor>=1000) ? (valor/1000)+"K" : valor;
   return `
-  <svg width="40" height="40" viewBox="0 0 40 40">
+  <svg width="56" height="56" viewBox="0 0 54 54">
     <defs>
       <radialGradient id="fg${valor}" cx="50%" cy="50%" r="50%">
         <stop offset="0%" stop-color="#fff" stop-opacity="0.97"/>
@@ -70,21 +56,21 @@ function fichaSVG(valor, color, borde, rayas, txt) {
         <stop offset="100%" stop-color="#222" />
       </radialGradient>
     </defs>
-    <circle cx="20" cy="20" r="18" fill="url(#fg${valor})" stroke="${borde}" stroke-width="2"/>
-    <circle cx="20" cy="20" r="11" fill="#fff" stroke="${borde}" stroke-width="1"/>
-    <circle cx="20" cy="20" r="7" fill="#efefef"/>
+    <circle cx="27" cy="27" r="25" fill="url(#fg${valor})" stroke="${borde}" stroke-width="3"/>
+    <circle cx="27" cy="27" r="15" fill="#fff" stroke="${borde}" stroke-width="1.3"/>
+    <circle cx="27" cy="27" r="10" fill="#efefef"/>
     ${[...Array(8)].map((_,i)=>{
       let ang = i*45;
-      return `<rect x="18" y="2" rx="1" ry="1" width="4" height="6"
-        fill="${rayas}" stroke="${borde}" stroke-width="0.4"
-        transform="rotate(${ang} 20 20)"/>`
+      return `<rect x="25" y="2.5" rx="2" ry="2" width="4" height="9"
+        fill="${rayas}" stroke="${borde}" stroke-width="0.6"
+        transform="rotate(${ang} 27 27)"/>`
     }).join("")}
-    <text x="20" y="25" text-anchor="middle"
-      font-size="11" font-family="'Montserrat',Arial,sans-serif"
-      fill="#222" stroke="#fff" stroke-width="1.2" paint-order="stroke"
+    <text x="27" y="32.5" text-anchor="middle"
+      font-size="17" font-family="'Montserrat',Arial,sans-serif"
+      fill="#222" stroke="#fff" stroke-width="2" paint-order="stroke"
       font-weight="bold" dominant-baseline="middle">$${txtVal}</text>
-    <text x="20" y="25" text-anchor="middle"
-      font-size="11" font-family="'Montserrat',Arial,sans-serif"
+    <text x="27" y="32.5" text-anchor="middle"
+      font-size="17" font-family="'Montserrat',Arial,sans-serif"
       fill="#222"
       font-weight="bold" dominant-baseline="middle">$${txtVal}</text>
   </svg>
@@ -104,20 +90,19 @@ function renderFichas() {
 renderFichas();
 
 function posicionarDeshacerBtn() {
+  // Espera a que la mesa esté renderizada
   const btn = document.getElementById('deshacerBtn');
-  let casillaRef = window.innerWidth <= 700
-    ? document.querySelector('[data-casilla-ficha="36"]')
-    : document.querySelector('[data-casilla-ficha="36"]');
-  if (btn && casillaRef) {
-    const rect = casillaRef.getBoundingClientRect();
+  const casilla36 = document.querySelector('[data-casilla-ficha="36"]');
+  if (btn && casilla36) {
+    const rect = casilla36.getBoundingClientRect();
     const mesaRect = mesa.getBoundingClientRect();
     btn.style.position = 'absolute';
-    btn.style.top = (rect.top - mesaRect.top + rect.height/2 - 10) + 'px';
-    btn.style.left = (rect.right - mesaRect.left + 6) + 'px';
+    btn.style.top = (rect.top - mesaRect.top + rect.height/2 - 28) + 'px';
+    btn.style.left = (rect.right - mesaRect.left + 16) + 'px';
     btn.style.margin = '0';
-    btn.style.width = window.innerWidth <= 700 ? '18px' : '36px';
-    btn.style.height = window.innerWidth <= 700 ? '18px' : '36px';
-    btn.style.borderRadius = window.innerWidth <= 700 ? '5px' : '9px';
+    btn.style.width = '56px';
+    btn.style.height = '56px';
+    btn.style.borderRadius = '13px';
     btn.classList.add('cuadrado');
     btn.style.display = 'flex';
     btn.style.alignItems = 'center';
@@ -125,6 +110,7 @@ function posicionarDeshacerBtn() {
   }
 }
 
+// ====== MESA Y APUESTAS ======
 function renderMesaApuestas() {
   let grid = mesa.querySelector('.mesa-casino');
   if (!grid) {
@@ -134,72 +120,34 @@ function renderMesaApuestas() {
   } else {
     grid.innerHTML = "";
   }
+  grid.appendChild(casillaNumDiv("0", 1, 1, 2, "green cero-doble"));
+  grid.appendChild(casillaNumDiv("00", 1, 3, 2, "green cero-doble"));
 
-  const isMobile = window.innerWidth <= 700;
-  if (isMobile) {
-    // Fila 1: "0" y "00" ocupando columnas 2 y 3
-    grid.appendChild(casillaNumDiv("0", 2, 1, 1, "green cero-doble"));
-    grid.appendChild(casillaNumDiv("00", 3, 1, 1, "green cero-doble"));
+  let numGrid = [
+    ["3","6","9","12","15","18","21","24","27","30","33","36"],
+    ["2","5","8","11","14","17","20","23","26","29","32","35"],
+    ["1","4","7","10","13","16","19","22","25","28","31","34"]
+  ];
+  for(let row=0; row<3; row++)
+    for(let col=0; col<12; col++)
+      grid.appendChild(
+        casillaNumDiv(
+          numGrid[row][col],
+          col+2,
+          row+1,
+          1,
+          (numGrid[row][col]==="0"||numGrid[row][col]==="00")?"green":WHEEL_COLORS[numGrid[row][col]]
+        )
+      );
 
-    // Números del 1 al 36, 4x9, filas 2 a 10
-    let n = 1;
-    for (let row = 0; row < 9; row++) {
-      for (let col = 0; col < 4; col++) {
-        const num = n++;
-        grid.appendChild(
-          casillaNumDiv(
-            num.toString(),
-            col + 1,
-            row + 2,
-            1,
-            WHEEL_COLORS[num]
-          )
-        );
-      }
-    }
+  grid.appendChild(casillaBetOuter("1st12",2,4,4,"doz1"));
+  grid.appendChild(casillaBetOuter("2nd12",6,4,4,"doz2"));
+  grid.appendChild(casillaBetOuter("3rd12",10,4,4,"doz3"));
+  grid.appendChild(casillaBetOuter("1 to 18",2,5,4,"low"));
+  grid.appendChild(casillaBetOuter("◆",6,5,2,"red","red"));
+  grid.appendChild(casillaBetOuter("◆",8,5,2,"black","black"));
+  grid.appendChild(casillaBetOuter("19 to 36",10,5,4,"high"));
 
-    // Fila 11: docenas (cada una ocupa más de 1 columna, total 4 columnas)
-    grid.appendChild(casillaBetOuter("1st12", 1, 11, 4/3, "doz1", "dozen"));
-    grid.appendChild(casillaBetOuter("2nd12", 1+4/3, 11, 4/3, "doz2", "dozen"));
-    grid.appendChild(casillaBetOuter("3rd12", 1+8/3, 11, 4/3, "doz3", "dozen"));
-
-    // Fila 12: mitades (1 to 18, 19 to 36), cada una ocupa 2 columnas
-    grid.appendChild(casillaBetOuter("1 to 18", 1, 12, 2, "low", "lowhigh"));
-    grid.appendChild(casillaBetOuter("19 to 36", 3, 12, 2, "high", "lowhigh"));
-
-    // Fila 13: Color rojo y negro, cada uno ocupa 2 columnas
-    grid.appendChild(casillaBetOuter("◆", 1, 13, 2, "red", "red"));
-    grid.appendChild(casillaBetOuter("◆", 3, 13, 2, "black", "black"));
-  } else {
-    // PC - clásico 3 filas x 12 columnas
-    grid.appendChild(casillaNumDiv("0", 1, 1, 2, "green cero-doble"));
-    grid.appendChild(casillaNumDiv("00", 1, 3, 2, "green cero-doble"));
-    let numGrid = [
-      ["3","6","9","12","15","18","21","24","27","30","33","36"],
-      ["2","5","8","11","14","17","20","23","26","29","32","35"],
-      ["1","4","7","10","13","16","19","22","25","28","31","34"]
-    ];
-    for(let row=0; row<3; row++)
-      for(let col=0; col<12; col++)
-        grid.appendChild(
-          casillaNumDiv(
-            numGrid[row][col],
-            col+2,
-            row+1,
-            1,
-            (numGrid[row][col]==="0"||numGrid[row][col]==="00")?"green":WHEEL_COLORS[numGrid[row][col]]
-          )
-        );
-    grid.appendChild(casillaBetOuter("1st12",2,4,4,"doz1"));
-    grid.appendChild(casillaBetOuter("2nd12",6,4,4,"doz2"));
-    grid.appendChild(casillaBetOuter("3rd12",10,4,4,"doz3"));
-    grid.appendChild(casillaBetOuter("1 to 18",2,5,4,"low"));
-    grid.appendChild(casillaBetOuter("◆",6,5,2,"red","red"));
-    grid.appendChild(casillaBetOuter("◆",8,5,2,"black","black"));
-    grid.appendChild(casillaBetOuter("19 to 36",10,5,4,"high"));
-  }
-
-  // Fichas sobrepuestas (más pequeñas en móvil)
   let agrupadas = {};
   apuestas.forEach((ap, idx) => {
     if(!agrupadas[ap.casilla]) agrupadas[ap.casilla] = [];
@@ -211,10 +159,8 @@ function renderMesaApuestas() {
       aps.slice(-4).forEach((ap,idx2) => {
         let fichaDiv = document.createElement('div');
         fichaDiv.className = "apuesta-ficha";
-        fichaDiv.style.top = `calc(50% + ${idx2*6}px)`;
+        fichaDiv.style.top = `calc(50% + ${idx2*14.5}px)`;
         fichaDiv.innerHTML = fichaSVG(FICHAS[ap.fichaIdx].valor, FICHAS[ap.fichaIdx].color, FICHAS[ap.fichaIdx].borde, FICHAS[ap.fichaIdx].rayas, FICHAS[ap.fichaIdx].txt);
-        fichaDiv.style.width = window.innerWidth <= 700 ? "18px" : "54px";
-        fichaDiv.style.height = window.innerWidth <= 700 ? "18px" : "54px";
         cas.appendChild(fichaDiv);
       });
     }
@@ -224,7 +170,7 @@ function renderMesaApuestas() {
 }
 renderMesaApuestas();
 
-function casillaNumDiv(num, col, row, span, colorClass) {
+function casillaNumDiv(num,col,row,span,colorClass) {
   let outer = document.createElement('div');
   let classes = ["casilla-num"];
   if (colorClass) {
@@ -243,7 +189,7 @@ function casillaNumDiv(num, col, row, span, colorClass) {
 }
 function casillaBetOuter(label,col,row,span,tipo,colorClass){
   let outer = document.createElement('div');
-  outer.className = "casilla-bet-outer" + (colorClass ? ` ${colorClass}` : "");
+  outer.className = "casilla-bet-outer";
   outer.style.gridColumn = `${col} / span ${span}`;
   outer.style.gridRow = `${row}`;
   outer.setAttribute('data-casilla-ficha',tipo);
@@ -275,6 +221,7 @@ deshacerBtn.onclick = deshacerApuesta;
 
 apostarBtn.onclick = () => {
   if (!apuestas.length) return alert("Haz una apuesta primero.");
+  // Enviamos TODAS las apuestas actuales del jugador
   socket.emit('apostar', {nombre, apuestas});
   mensajeDiv.innerText = "¡Apuesta enviada! Esperando giro...";
   apostarBtn.disabled = true;
@@ -285,6 +232,13 @@ function updateBalance() {
   balanceSpan.innerText = saldo;
 }
 updateBalance();
+
+// ¡Recibe el estado oficial del backend!
+socket.on('update', data => {
+  // Si quieres puedes mostrar apuestas de todos aquí si lo deseas
+  // Pero el saldo y apuestas propias se manejan localmente
+  // (Opcional: podrías bloquear apostar si ya apostaste, según reglas)
+});
 
 socket.on('resultado', data => {
   ruletaGirando = true;
@@ -316,3 +270,13 @@ socket.on('resultado', data => {
     renderMesaApuestas();
   }, 3500);
 });
+
+// Slider funcional para overlay oscuro real
+const overlay = document.querySelector('.background-overlay');
+const opacitySlider = document.getElementById('opacity-slider');
+if (overlay && opacitySlider) {
+  opacitySlider.addEventListener('input', (e) => {
+    overlay.style.opacity = e.target.value;
+  });
+  overlay.style.opacity = opacitySlider.value;
+}
