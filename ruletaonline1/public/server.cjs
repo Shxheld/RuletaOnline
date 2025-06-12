@@ -1,43 +1,81 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
-const fs = require('fs');
+
+const cors = require('cors');
+app.use(cors({ origin: '*', methods: ['GET', 'POST'] }));
+
+const io = require('socket.io')(http, {
+  cors: { origin: '*', methods: ['GET', 'POST'] }
+});
+
 const path = require('path');
+const { Pool } = require('pg');
 
 // Sirve archivos estáticos desde la carpeta 'public'
 app.use(express.static('public'));
 
-// Opcional: redirige la raíz a host.html o index.html
+// Redirige la raíz a host.html o index.html
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/host.html');
+  res.sendFile(path.join(__dirname, 'public', 'host.html'));
 });
 
+// ==== BASE DE DATOS POSTGRES ====
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+// ========== FUNCIONES AUXILIARES PARA LA BASE ==========
+
+// Devuelve TODAS las apuestas actuales desde la base
+async function cargarApuestas() {
+  const { rows } = await pool.query('SELECT * FROM apuestas');
+  return rows;
+}
+
+// Borra todas las apuestas de todos los jugadores (tras resultado)
+async function borrarApuestas() {
+  await pool.query('DELETE FROM apuestas');
+}
+
+// Borra las apuestas de un jugador por su playerId
+async function borrarApuestasPorJugador(playerId) {
+  await pool.query('DELETE FROM apuestas WHERE playerid = $1', [playerId]);
+}
+
+// Agrega una apuesta a la base
+async function guardarApuesta(apuesta) {
+  await pool.query(
+    `INSERT INTO apuestas (player, playerid, monto, tipo, valor, fichaidx, casilla)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [
+      apuesta.player,
+      apuesta.playerId,
+      apuesta.monto,
+      apuesta.tipo,
+      apuesta.valor,
+      apuesta.fichaIdx ?? null,
+      apuesta.casilla ?? null
+    ]
+  );
+}
+
+// ========== SISTEMA DE JUGADORES Y APUESTAS ==========
+
 let jugadores = [];
-let apuestas = [];
 
-// Archivo donde se guardan las apuestas persistentes
-const APU_FILE = path.join(__dirname, 'apuestas.json');
-
-// Cargar apuestas al iniciar el servidor (si el archivo existe)
-if (fs.existsSync(APU_FILE)) {
-  try {
-    apuestas = JSON.parse(fs.readFileSync(APU_FILE, 'utf8'));
-  } catch (e) {
-    console.error('Error leyendo apuestas.json:', e);
-    apuestas = [];
-  }
-}
-
-// Función para guardar apuestas cada vez que cambian
-function guardarApuestas() {
-  fs.writeFile(APU_FILE, JSON.stringify(apuestas, null, 2), err => {
-    if (err) console.error('Error guardando apuestas.json:', err);
-  });
-}
+// Al iniciar el servidor, no cargamos jugadores (solo apuestas se guardan en la base)
 
 io.on('connection', socket => {
   let jugadorActual = null;
+
+  // Al conectar, envía el estado actual (jugadores solo memoria, apuestas desde DB)
+  (async () => {
+    const apuestas = await cargarApuestas();
+    socket.emit('update', { jugadores, apuestas });
+  })();
 
   socket.on('registro', data => {
     jugadorActual = { id: socket.id, name: data.nombre, saldo: data.saldo };
@@ -47,35 +85,54 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('apostar', data => {
-    // Guarda apuestas y emite estado
-    apuestas = apuestas.filter(a => a.playerId !== socket.id);
-    (data.apuestas || []).forEach(ap => {
-      apuestas.push({ ...ap, player: data.nombre, playerId: socket.id, monto: ap.monto, tipo: ap.tipo, valor: ap.valor });
-    });
-    guardarApuestas(); // <-- GUARDAR
-    emitirEstado();
+  socket.on('apostar', async data => {
+    // Borra las apuestas previas del jugador y guarda las nuevas
+    await borrarApuestasPorJugador(socket.id);
+    for (const ap of (data.apuestas || [])) {
+      await guardarApuesta({
+        ...ap,
+        player: data.nombre,
+        playerId: socket.id
+      });
+    }
+    await emitirEstado();
   });
 
-  socket.on('resultado', data => {
+  socket.on('resultado', async data => {
     io.emit('resultado', data);
-    // Reset apuestas tras el giro
-    apuestas = [];
-    guardarApuestas(); // <-- GUARDAR
-    emitirEstado();
+    await borrarApuestas();
+    await emitirEstado();
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     jugadores = jugadores.filter(j => j.id !== socket.id);
-    apuestas = apuestas.filter(a => a.playerId !== socket.id);
-    guardarApuestas(); // <-- GUARDAR
-    emitirEstado();
+    await borrarApuestasPorJugador(socket.id);
+    await emitirEstado();
   });
 
-  function emitirEstado() {
+  async function emitirEstado() {
+    const apuestas = await cargarApuestas();
     io.emit('update', { jugadores, apuestas });
   }
 });
+
+// ========== CREACIÓN DE TABLA SI NO EXISTE ==========
+
+(async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS apuestas (
+      id SERIAL PRIMARY KEY,
+      player TEXT,
+      playerid TEXT,
+      monto INT,
+      tipo TEXT,
+      valor TEXT,
+      fichaidx INT,
+      casilla TEXT
+    )
+  `);
+  console.log('Tabla "apuestas" verificada');
+})();
 
 const PORT = process.env.PORT || 8080;
 http.listen(PORT, () => console.log('Servidor en puerto', PORT));
