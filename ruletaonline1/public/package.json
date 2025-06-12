@@ -1,5 +1,5 @@
 {
-  "name": "ruletaonline",
+  "name": "ruleta-backend",
   "version": "1.0.0",
   "main": "server.cjs",
   "type": "module",
@@ -12,3 +12,4 @@
     "socket.io": "^4.8.1"
   }
 }
+
