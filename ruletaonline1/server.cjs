@@ -41,43 +41,6 @@ io.on('connection', socket => {
       jugadores.push(jugadorActual);
       await emitirEstado();
     }
-  });
-
-  socket.on('apostar', async data => {
-    await saveApuestas(socket.id, data.nombre, data.apuestas || []);
-    await emitirEstado();
-  });
-
-  socket.on('resultado', async data => {
-    io.emit('resultado', data);
-    await clearApuestas();
-    await emitirEstado();
-  });
-
-  socket.on('disconnect', async () => {
-    jugadores = jugadores.filter(j => j.id !== socket.id);
-    await pool.query('DELETE FROM apuestas WHERE player_id = $1', [socket.id]);
-    await emitirEstado();
-  });
-
-  async function emitirEstado() {
-    const apuestas = await getApuestas();
-    io.emit('update', { jugadores, apuestas });
-  }
-});
-
-const PORT = process.env.PORT || 8080;
-http.listen(PORT, () => console.log('Servidor en puerto', PORT));
-
-io.on('connection', socket => {
-  let jugadorActual = null;
-
-  socket.on('registro', async data => {
-    jugadorActual = { id: socket.id, name: data.nombre, saldo: data.saldo };
-    if (!jugadores.find(j => j.id === socket.id)) {
-      jugadores.push(jugadorActual);
-      await emitirEstado();
-    }
     console.log('Jugador registrado:', jugadorActual);
   });
 
@@ -107,3 +70,6 @@ io.on('connection', socket => {
     console.log('Emit update:', { jugadores, apuestas });
   }
 });
+
+const PORT = process.env.PORT || 8080;
+http.listen(PORT, () => console.log('Servidor en puerto', PORT));
