@@ -2,74 +2,49 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const { Pool } = require('pg');
-
-// Usa la URL de la variable de entorno (Railway la inyecta automáticamente)
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
 
 app.use(express.static('public'));
 
 let jugadores = [];
-
-async function getApuestas() {
-  const result = await pool.query('SELECT * FROM apuestas');
-  return result.rows;
-}
-
-async function saveApuestas(playerId, playerName, apuestasList) {
-  await pool.query('DELETE FROM apuestas WHERE player_id = $1', [playerId]);
-  for (const ap of apuestasList) {
-    await pool.query(
-      'INSERT INTO apuestas (player_id, player_name, monto, tipo, valor) VALUES ($1, $2, $3, $4, $5)',
-      [playerId, playerName, ap.monto, ap.tipo, ap.valor]
-    );
-  }
-}
-
-async function clearApuestas() {
-  await pool.query('DELETE FROM apuestas');
-}
+let apuestas = [];
 
 io.on('connection', socket => {
   let jugadorActual = null;
 
-  socket.on('registro', async data => {
+  socket.on('registro', data => {
     jugadorActual = { id: socket.id, name: data.nombre, saldo: data.saldo };
     if (!jugadores.find(j => j.id === socket.id)) {
       jugadores.push(jugadorActual);
-      await emitirEstado();
+      emitirEstado();
     }
-    console.log('Jugador registrado:', jugadorActual);
   });
 
-  socket.on('apostar', async data => {
-    await saveApuestas(socket.id, data.nombre, data.apuestas || []);
-    await emitirEstado();
-    console.log('Apuesta recibida de', data.nombre);
+  socket.on('apostar', data => {
+    // Guarda apuestas y emite estado
+    apuestas = apuestas.filter(a => a.playerId !== socket.id);
+    (data.apuestas || []).forEach(ap => {
+      apuestas.push({ ...ap, player: data.nombre, playerId: socket.id, monto: ap.monto, tipo: ap.tipo, valor: ap.valor });
+    });
+    emitirEstado();
   });
 
-  socket.on('resultado', async data => {
+  socket.on('resultado', data => {
     io.emit('resultado', data);
-    await clearApuestas();
-    await emitirEstado();
-    console.log('Resultado enviado:', data);
+    // Reset apuestas tras el giro
+    apuestas = [];
+    emitirEstado();
   });
 
-  socket.on('disconnect', async () => {
+  socket.on('disconnect', () => {
     jugadores = jugadores.filter(j => j.id !== socket.id);
-    await pool.query('DELETE FROM apuestas WHERE player_id = $1', [socket.id]);
-    await emitirEstado();
-    console.log('Jugador desconectado:', socket.id);
+    apuestas = apuestas.filter(a => a.playerId !== socket.id);
+    emitirEstado();
   });
 
-  async function emitirEstado() {
-    const apuestas = await getApuestas();
+  function emitirEstado() {
     io.emit('update', { jugadores, apuestas });
-    console.log('Emit update:', { jugadores, apuestas });
   }
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => console.log('Servidor en puerto', PORT));
