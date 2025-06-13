@@ -32,7 +32,7 @@ const apostarBtn = document.getElementById('apostarBtn');
 
 // NOMBRE
 const nombreForm = document.getElementById('nombre-form');
-const inputNombre = document.getElementById('input-nombre');
+const inputNombre = document.getElementById('nombre-usuario-input');
 const btnNombre = document.getElementById('btn-nombre');
 const nombreUsuarioContainer = document.getElementById('nombre-usuario-container');
 
