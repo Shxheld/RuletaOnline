@@ -1,5 +1,3 @@
-// ========== main-player.js sincronizado con backend y base de datos ==========
-
 const socket = io();
 
 const FICHAS = [
@@ -32,13 +30,13 @@ const mensajeDiv = document.getElementById('mensaje');
 const deshacerBtn = document.getElementById('deshacerBtn');
 const apostarBtn = document.getElementById('apostarBtn');
 
+// NOMBRE
 const nombreForm = document.getElementById('nombre-form');
-const inputNombre = document.getElementById('nombre-usuario-input'); // <--- CORREGIDO
+const inputNombre = document.getElementById('input-nombre');
 const btnNombre = document.getElementById('btn-nombre');
 const nombreUsuarioContainer = document.getElementById('nombre-usuario-container');
 
-nombreForm.onsubmit = (e) => {
-  e.preventDefault(); // <- ¡Esto previene el refresh!
+btnNombre.onclick = () => {
   const val = inputNombre.value.trim();
   if (!val) return alert("Debes escribir tu nombre.");
   nombre = val;
@@ -95,11 +93,12 @@ function posicionarDeshacerBtn() {
   const btn = document.getElementById('deshacerBtn');
   const casilla36 = document.querySelector('[data-casilla-ficha="36"]');
   if (btn && casilla36) {
+    // Posiciona el botón justo a la derecha de la casilla 36
     const rect = casilla36.getBoundingClientRect();
     const mesaRect = mesa.getBoundingClientRect();
     btn.style.position = 'absolute';
     btn.style.top = (rect.top - mesaRect.top + rect.height/2 - 28) + 'px';
-    btn.style.left = (rect.right - mesaRect.left + 16) + 'px';
+    btn.style.left = (rect.right - mesaRect.left + 16) + 'px'; // 16px de separación
     btn.style.margin = '0';
     btn.style.width = '56px';
     btn.style.height = '56px';
@@ -167,7 +166,7 @@ function renderMesaApuestas() {
     }
   });
 
-  setTimeout(posicionarDeshacerBtn, 50);
+  setTimeout(posicionarDeshacerBtn, 50); // Espera a que se pinte el DOM
 }
 renderMesaApuestas();
 
@@ -222,7 +221,6 @@ deshacerBtn.onclick = deshacerApuesta;
 
 apostarBtn.onclick = () => {
   if (!apuestas.length) return alert("Haz una apuesta primero.");
-  // Enviamos TODAS las apuestas actuales del jugador
   socket.emit('apostar', {nombre, apuestas});
   mensajeDiv.innerText = "¡Apuesta enviada! Esperando giro...";
   apostarBtn.disabled = true;
@@ -233,13 +231,6 @@ function updateBalance() {
   balanceSpan.innerText = saldo;
 }
 updateBalance();
-
-// ¡Recibe el estado oficial del backend!
-socket.on('update', data => {
-  // Si quieres puedes mostrar apuestas de todos aquí si lo deseas
-  // Pero el saldo y apuestas propias se manejan localmente
-  // (Opcional: podrías bloquear apostar si ya apostaste, según reglas)
-});
 
 socket.on('resultado', data => {
   ruletaGirando = true;
