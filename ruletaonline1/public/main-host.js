@@ -208,7 +208,7 @@ function girarRuleta() {
   const angStart = 2*Math.PI*vueltas + angTarget;
 
   const t0 = Date.now();
-  const duracion = 8500; // 8.5 segundos para giro realista y lento
+  const duracion = 15000; // 8.5 segundos para giro realista y lento
   let stopped = false;
   let lastSector = null;
 
