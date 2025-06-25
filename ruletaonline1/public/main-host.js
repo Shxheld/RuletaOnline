@@ -204,11 +204,11 @@ function girarRuleta() {
   const angTarget = Math.PI - ((idx + 0.5)/n)*2*Math.PI;
 
   // Giro: vueltas iniciales, desaceleración muy suave al final
-  const vueltas = 7 + Math.random()*1.2;
+  const vueltas = 5 + Math.random()*1.2;
   const angStart = 2*Math.PI*vueltas + angTarget;
 
   const t0 = Date.now();
-  const duracion = 13500; // 8.5 segundos para giro realista y lento
+  const duracion = 10500; // 8.5 segundos para giro realista y lento
   let stopped = false;
   let lastSector = null;
 
