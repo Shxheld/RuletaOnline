@@ -192,6 +192,9 @@ function girarRuleta() {
   girarBtn.disabled = true;
   ruletaResultado.innerText = "Girando...";
 
+  // Nuevo: avisar a los jugadores que la ruleta está girando
+  socket.emit('ruleta_girando');
+
   let idx = Math.floor(Math.random()*WHEEL_ORDER.length);
   let ganador = WHEEL_ORDER[idx];
   const n = WHEEL_ORDER.length;
@@ -247,6 +250,15 @@ function girarRuleta() {
   }
   animate();
 }
+
+// Permitir "espacio" o "enter" para girar la ruleta
+document.addEventListener('keydown', function(e) {
+  if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+  if ((e.code === "Space" || e.code === "Enter") && !ruletaGirando) {
+    e.preventDefault();
+    girarBtn.click();
+  }
+});
 
 girarBtn.onclick = girarRuleta;
 
