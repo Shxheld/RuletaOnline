@@ -82,7 +82,7 @@ function renderFichas() {
     div.className = "ficha" + (fichaSeleccionada===f.valor ? " selected":"");
     div.innerHTML = fichaSVG(f.valor, f.color, f.borde, f.rayas, f.txt);
     div.title = "$"+f.valor;
-    div.onclick = ()=>{fichaSeleccionada=f.valor; renderFichas();};
+    div.onclick = ()=>{if (!ruletaGirando) {fichaSeleccionada=f.valor; renderFichas();}};
     fichasCont.appendChild(div);
   });
 }
@@ -211,7 +211,7 @@ function apostarEn(tipo, valor, casillaDiv) {
   renderMesaApuestas();
 }
 function deshacerApuesta() {
-  if (!apuestas.length) return;
+  if (!apuestas.length || ruletaGirando) return;
   let ap = apuestas.pop();
   saldo += ap.monto;
   updateBalance();
@@ -220,6 +220,7 @@ function deshacerApuesta() {
 deshacerBtn.onclick = deshacerApuesta;
 
 apostarBtn.onclick = () => {
+  if (ruletaGirando) return;
   if (!apuestas.length) return alert("Haz una apuesta primero.");
   socket.emit('apostar', {nombre, apuestas});
   mensajeDiv.innerText = "¡Apuesta enviada! Esperando giro...";
@@ -232,6 +233,15 @@ function updateBalance() {
 }
 updateBalance();
 
+// Nuevo: bloquear la mesa al recibir el evento de giro
+socket.on('ruleta_girando', () => {
+  ruletaGirando = true;
+  apostarBtn.disabled = true;
+  deshacerBtn.disabled = true;
+  mensajeDiv.innerText = "La ruleta está girando. Espera el resultado...";
+});
+
+// Cuando llega el resultado, desbloquear después del tiempo del giro
 socket.on('resultado', data => {
   ruletaGirando = true;
   const ganador = data.ganador;
