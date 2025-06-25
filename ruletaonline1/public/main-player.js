@@ -19,7 +19,7 @@ const WHEEL_COLORS = {
 
 let fichaSeleccionada = FICHAS[0].valor;
 let apuestas = [];
-let saldo = 1000;
+let saldo = 300;
 let nombre = "";
 let ruletaGirando = false;
 
