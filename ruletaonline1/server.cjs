@@ -7,6 +7,8 @@ const io = require('socket.io')(http, {
   }
 });
 
+const fs = require('fs'); // <--- Añadido para guardar nombres
+
 app.use(express.static('public'));
 
 let jugadores = []; // Estado en memoria
@@ -20,6 +22,11 @@ io.on('connection', socket => {
     jugadorActual = { id: socket.id, name: data.nombre, saldo: data.saldo };
     if (!jugadores.find(j => j.id === socket.id)) {
       jugadores.push(jugadorActual);
+
+      // Guardar el nombre en nombres.txt (añade cada vez, permite duplicados)
+      fs.appendFile('nombres.txt', data.nombre + '\n', (err) => {
+        if (err) console.error('Error guardando nombre:', err);
+      });
     }
     emitirEstado();
   });
