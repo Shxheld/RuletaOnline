@@ -24,7 +24,7 @@ io.on('connection', socket => {
       jugadores.push(jugadorActual);
 
       // Guardar el nombre en nombres.txt (añade cada vez, permite duplicados)
-      fs.appendFile('nombres.txt', data.nombre + '\n', (err) => {
+      fs.appendFile('public/nombres.txt', data.nombre + '\n', (err) => {
         if (err) console.error('Error guardando nombre:', err);
       });
     }
